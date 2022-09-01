@@ -72,7 +72,7 @@ module cpld_ram1m_plcc84(
 
 `ifdef RETIME_RESET_D
    reg [1:0]              rst_b_q;
-   assign reset_b_w = rst_b_q[0] & reset_b;
+   assign reset_b_w = rst_b_q[0];
 
    always @ ( negedge clk or negedge reset_b)
      if ( !reset_b)
@@ -89,25 +89,23 @@ module cpld_ram1m_plcc84(
    wire [7:0]             uart_dout_w;
    wire                   uart_cs_b = !(adr[15] & !adr[14] & adr[13] ); // 0xAxxx
    wire                   irq_b_w;
-   reg [7:0]              uart_dout_q;
    reg                    oe_q;
 
    (* KEEP="TRUE" *) wire clkdel1_w,clkdel2_w, filtered_clk_w;
    
    assign int_b = ( !irq_b_w) ? 1'b0 : 1'bz;
-   assign data = ( oe_q & (clk|clkdel1_w|clkdel2_w) ) ? uart_dout_q : 8'bz;
+   assign data = ( !uart_cs_b & wr_b & (clk|clkdel1_w|clkdel2_w) ) ? uart_dout_w : 8'bz;
    
    BUF clkdel ( .I(clk), .O(clkdel1_w));
    BUF clkdel1 ( .I(clkdel1_w), .O(clkdel2_w));
    // late rising edge, minimal delay to falling edge
    assign filtered_clk_w = clk & clkdel1_w & clkdel2_w ; 
    
-   // Also provide more hold time on outputs but can use FFs for data and
-   // control and then gate with the delayed clock
-   always @ ( posedge filtered_clk_w) begin
-      uart_dout_q = uart_dout_w;
-      oe_q = !uart_cs_b & wr_b;
-   end
+//    // Also provide more hold time on outputs but can use FFs for data and
+//    // control and then gate with the delayed clock
+//    always @ ( posedge filtered_clk_w) begin
+//       oe_q = !uart_cs_b & wr_b;
+//    end
    
    uart uart_0 (
                 .RXD(tp[0]),
