@@ -1,0 +1,5 @@
+verilog work "../src/cpld_ram1m_plcc84.v"
+verilog work "../../generic/src/rxfifo.v"
+verilog work "../../generic/src/uartrx.v"
+verilog work "../../generic/src/uarttx.v"
+verilog work "../../generic/src/uart.v"
