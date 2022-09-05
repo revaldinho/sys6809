@@ -24,6 +24,9 @@
   *  6    [=0] Receive Parity Error  (1=Error)
   *  7    Interrupt Flag (see Control Bits 5-7)
   */
+
+`include "uart.vh"
+
 module uart (
 	     input        RXD,
 	     output       TXD,
@@ -35,23 +38,29 @@ module uart (
 	     input [7:0]  din,
 	     output [7:0] dout,
              output       irq_b,
+             output       frame_error,
+             output       overrun,
 	     input        clk,
 	     input        reset_b
 	     ) ;
 
-   wire [7:0]             host_dout_w;
-   wire                   host_dir_w;
-   wire                   host_dor_w;
-   wire                   cts_w;
-   wire                   host_data_rd_w = rnw & !cs_b & regsel ;
-   wire                   host_data_wr_w = !rnw & !cs_b & regsel;
+  wire [7:0]              host_dout_w;
+  wire                    host_dir_w;
+  wire                    host_dor_w;
+  wire                    cts_w;
+  wire                    host_data_rd_w = rnw & !cs_b & regsel ;
+  wire                    host_data_wr_w = !rnw & !cs_b & regsel;
 
-   reg [1:0]              tx_ctrl_q;
-   reg                    rx_int_en_q;
-   reg                    irq_q;
-
+  reg [1:0]               tx_ctrl_q;
+  reg                     rx_int_en_q;
+  reg                     irq_q;
 
   reg                     tx_int_en_w;
+
+`ifndef ERROR_FLAGS
+  assign overrun = 1'b0;
+  assign frame_error = 1'b0;
+`endif
 
   assign CTS_B = !cts_w;
   assign dout = (regsel) ? host_dout_w : { irq_q, 5'b0, host_dir_w, host_dor_w } ;
@@ -68,14 +77,13 @@ module uart (
 
   always @ ( negedge clk or negedge reset_b ) begin
     if ( !reset_b ) begin
-       tx_ctrl_q <= 0;
-       irq_q <= 0;
+      {tx_ctrl_q, irq_q } <= 0;
     end
     else begin
       if ( !rnw & !cs_b & !regsel) begin
         {rx_int_en_q, tx_ctrl_q}  <= din[7:5];
-      end       
-       irq_q <= ( tx_int_en_w & host_dir_w ) | ( rx_int_en_q & host_dor_w);
+      end
+      irq_q <= ( tx_int_en_w & host_dir_w ) | ( rx_int_en_q & host_dor_w);
     end
   end
 
@@ -92,6 +100,10 @@ module uart (
                   .host_rd(host_data_rd_w),
                   .host_dout(host_dout_w),
                   .host_dor(host_dor_w),
+`ifdef ERROR_FLAGS
+                  .overrun(overrun),
+                  .frame_error(frame_error),
+`endif
                   .cts(cts_w),
                   .clk(clk),
                   .reset_b(reset_b)

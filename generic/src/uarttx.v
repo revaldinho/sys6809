@@ -1,8 +1,16 @@
+`include "uart.vh"
+
 // TX Specific sizing for slow clock
 `define TXTICKSPERBIT    16
 `define TXTICKSPERBITBY2 (`TXTICKSPERBIT>>1)
-`define TXTICKCTRSZ      4 // to be large enough to count to TXTICKSPERBIT-1
 
+`ifdef TWO_STOP_BITS
+  `define TXTICKSPERSTOPBIT    `TXTICKSPERBIT*2
+  `define TXTICKCTRSZ          5 // to be large enough to count to TXTICKSPERBIT-1
+`else
+  `define TXTICKSPERSTOPBIT    `TXTICKSPERBIT
+  `define TXTICKCTRSZ          4 // to be large enough to count to TXTICKSPERBIT-1
+`endif
 `define TXIDLE  2'b00
 `define TXSTART 2'b01
 `define TXBIT   2'b11
@@ -65,7 +73,7 @@ module uarttx(
       end
       `TXSTOP: begin
 	serout_r = 1'b1;
-	if ( ctr_q == `TXTICKSPERBIT-1 ) begin
+	if ( ctr_q == `TXTICKSPERSTOPBIT-1 ) begin
 	  state_d = `TXIDLE;
 	end
       end
@@ -73,10 +81,10 @@ module uarttx(
   end
 
    always @ ( negedge clk) begin
-      ctr_q <= ctr_d;      
+      ctr_q <= ctr_d;
    end
-   
-   
+
+
   always @ ( negedge clk or negedge reset_b ) begin
     if ( ! reset_b ) begin
       state_q <= `TXIDLE ;
