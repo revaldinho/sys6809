@@ -21,6 +21,9 @@
 `define UART 1
 //`define RETIME_RESET_D 1
 
+`ifdef UART
+`include "uart.vh"
+`endif
 
 module cpld_ram1m_plcc84(
                          input        rfsh_b,
@@ -59,7 +62,7 @@ module cpld_ram1m_plcc84(
 
    wire                               reset_b_w;
    wire                               rnw = wr_b;
-                              
+
 
 `ifdef RAM_CTRL
    assign ramadrhi = {3'b000,adr[14] } ; // Use only bottom 32K of bank 0
@@ -89,24 +92,24 @@ module cpld_ram1m_plcc84(
    wire [7:0]             uart_dout_w;
    wire                   uart_cs_b = !(adr[15] & !adr[14] & adr[13] ); // 0xAxxx
    wire                   irq_b_w;
-   reg                    oe_q;
+//   reg                    oe_q;
 
    (* KEEP="TRUE" *) wire clkdel1_w,clkdel2_w, filtered_clk_w;
-   
+
    assign int_b = ( !irq_b_w) ? 1'b0 : 1'bz;
    assign data = ( !uart_cs_b & wr_b & (clk|clkdel1_w|clkdel2_w) ) ? uart_dout_w : 8'bz;
-   
+
    BUF clkdel ( .I(clk), .O(clkdel1_w));
    BUF clkdel1 ( .I(clkdel1_w), .O(clkdel2_w));
    // late rising edge, minimal delay to falling edge
-   assign filtered_clk_w = clk & clkdel1_w & clkdel2_w ; 
-   
-//    // Also provide more hold time on outputs but can use FFs for data and
-//    // control and then gate with the delayed clock
-//    always @ ( posedge filtered_clk_w) begin
-//       oe_q = !uart_cs_b & wr_b;
-//    end
-   
+   assign filtered_clk_w = clk & clkdel1_w & clkdel2_w ;
+
+  // Also provide more hold time on outputs but can use FFs for data and
+  // control and then gate with the delayed clock
+//   always @ ( posedge filtered_clk_w) begin
+//     oe_q = !uart_cs_b & wr_b;
+//   end
+
    uart uart_0 (
                 .RXD(tp[0]),
                 .TXD(tp[1]),
@@ -117,12 +120,15 @@ module cpld_ram1m_plcc84(
                 .rnw( rnw ),
                 .din(data),
                 .dout(uart_dout_w),
+`ifdef ERROR_FLAGS
+                .frame_error(tp[3]),
+                .overrun(tp[4]),
+`endif
                 .clk(filtered_clk_w),
                 .irq_b(irq_b_w),
                 .reset_b(reset_b_w)
                 ) ;
-   
+
 `endif
 
 endmodule
-
