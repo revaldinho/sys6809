@@ -104,12 +104,6 @@ module cpld_ram1m_plcc84(
    // late rising edge, minimal delay to falling edge
    assign filtered_clk_w = clk & clkdel1_w & clkdel2_w ;
 
-  // Also provide more hold time on outputs but can use FFs for data and
-  // control and then gate with the delayed clock
-//   always @ ( posedge filtered_clk_w) begin
-//     oe_q = !uart_cs_b & wr_b;
-//   end
-
    uart uart_0 (
                 .RXD(tp[0]),
                 .TXD(tp[1]),
