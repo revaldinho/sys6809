@@ -49,7 +49,10 @@ jedec:
 netgen:
 	netgen -w -ofmt verilog  -aka ${project_name}.ngd
 
-all: clean lso synthesis ngdbuild cpldfit tsim jedec netgen
+report: ${project_name}.rpt ${project_name}.syr
+	egrep -i '(error|warning)' *.syr *.rpt
+
+all: clean lso synthesis ngdbuild cpldfit tsim jedec netgen report
 
 clean:
 	rm -rf *~ .#*
