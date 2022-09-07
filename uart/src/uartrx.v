@@ -22,8 +22,7 @@ module uartrx(
 	      input        host_rd,
 	      output       host_dor,
               output       frame_error,
-              output       overrun,
-	      output       cts
+              output       overrun
 	    );
 
   reg [1:0] state_d, state_q;
@@ -35,7 +34,6 @@ module uartrx(
   wire falling_w = sin_q[0] & !sin_q[1];
 
   wire fifo_dir_w;
-  wire fifo_empty;
   reg we_d, we_q;
 
 `ifdef ERROR_FLAGS
@@ -48,8 +46,6 @@ module uartrx(
   assign frame_error = 1'b0;
 `endif
 
-  assign cts = fifo_empty ;
-
   rxfifo rxfifo_0 (
 		   .din(rxbyte_q),
 		   .we(we_q),
@@ -57,7 +53,6 @@ module uartrx(
 		   .host_dout(host_dout),
 		   .host_dor(host_dor),
 		   .dir(fifo_dir_w),
-		   .empty(fifo_empty),
 		   .clk(clk),
 		   .reset_b(reset_b)
 		   );

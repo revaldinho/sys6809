@@ -1,6 +1,6 @@
 verilog work "../src/m6809_buscard.v"
-verilog work "../../generic/src/rxfifo.v"
-verilog work "../../generic/src/uartrx.v"
-verilog work "../../generic/src/uarttx.v"
-verilog work "../../generic/src/uart.v"
+verilog work "../../uart/src/rxfifo.v"
+verilog work "../../uart/src/uartrx.v"
+verilog work "../../uart/src/uarttx.v"
+verilog work "../../uart/src/uart.v"
 

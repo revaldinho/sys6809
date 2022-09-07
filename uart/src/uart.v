@@ -30,8 +30,8 @@
 module uart (
 	     input        RXD,
 	     output       TXD,
-	     output       CTS_B,
-	     input        RTS_B,
+	     input        CTS_B,
+	     output reg   RTS_B,
 	     input        regsel,
 	     input        cs_b,
 	     input        rnw,
@@ -47,31 +47,28 @@ module uart (
   wire [7:0]              host_dout_w;
   wire                    host_dir_w;
   wire                    host_dor_w;
-  wire                    cts_w;
   wire                    host_data_rd_w = rnw & !cs_b & regsel ;
   wire                    host_data_wr_w = !rnw & !cs_b & regsel;
 
   reg [1:0]               tx_ctrl_q;
   reg                     rx_int_en_q;
   reg                     irq_q;
-
-  reg                     tx_int_en_w;
+  reg                     tx_int_en_r;
 
 `ifndef ERROR_FLAGS
   assign overrun = 1'b0;
   assign frame_error = 1'b0;
 `endif
 
-  assign CTS_B = !cts_w;
   assign dout = (regsel) ? host_dout_w : { irq_q, 5'b0, host_dir_w, host_dor_w } ;
   assign irq_b = !irq_q;
 
   always @ ( * ) begin
     case  (tx_ctrl_q )
-      2'b00 : { tx_int_en_w } = 1'b0;
-      2'b01 : { tx_int_en_w } = 1'b1;
-      2'b10 : { tx_int_en_w } = 1'b0;
-      2'b11 : { tx_int_en_w } = 1'b0; // transmit a break on TXDO
+      2'b00 : { RTS_B, tx_int_en_r } = 2'b00; // assert RTS
+      2'b01 : { RTS_B, tx_int_en_r } = 2'b01; // assert RTS
+      2'b10 : { RTS_B, tx_int_en_r } = 2'b10; // de-assert RTS
+      2'b11 : { RTS_B, tx_int_en_r } = 2'b00; // assert RTS, transmit a break on TXDO
     endcase // case (tx_ctrl_q )
   end
 
@@ -83,7 +80,7 @@ module uart (
       if ( !rnw & !cs_b & !regsel) begin
         {rx_int_en_q, tx_ctrl_q}  <= din[7:5];
       end
-      irq_q <= ( tx_int_en_w & host_dir_w ) | ( rx_int_en_q & host_dor_w);
+      irq_q <= ( tx_int_en_r & host_dir_w ) | ( rx_int_en_q & host_dor_w);
     end
   end
 
@@ -95,6 +92,7 @@ module uart (
  		  .clk(clk),
  		  .reset_b(reset_b)
  		  );
+
   uartrx uartrx_0(
                   .serin(RXD),
                   .host_rd(host_data_rd_w),
@@ -104,7 +102,6 @@ module uart (
                   .overrun(overrun),
                   .frame_error(frame_error),
 `endif
-                  .cts(cts_w),
                   .clk(clk),
                   .reset_b(reset_b)
                   );

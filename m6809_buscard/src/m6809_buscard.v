@@ -17,7 +17,7 @@
  *
  */
 
-`define UART 1
+//`define UART 1
 //`define RETIME_RESET_D 1
 
 `ifdef UART
@@ -91,8 +91,8 @@ module m6809_buscard(
    uart uart_0 (
                 .RXD(pi_gpio_15),
                 .TXD(pi_gpio_14),
-                .CTS_B(pmod_gpio[0]),
-                .RTS_B(1'b0),
+                .RTS_B(pmod_gpio[0]),
+                .CTS_B(1'b0),
                 .regsel(adr[0]),
                 .cs_b( uart_cs_b ),
                 .rnw( rnw ),
@@ -106,6 +106,23 @@ module m6809_buscard(
                 .irq_b(irq_b_w),
                 .reset_b(reset_b_w)
                 ) ;
+
+`else // !`ifdef UART
+  // Simple test
+
+  BUF clkdel ( .I(clk), .O(clkdel1_w));
+  BUF clkdel1 ( .I(clkdel1_w), .O(clkdel2_w));
+  // late rising edge, minimal delay to falling edge
+  assign filtered_clk_w = clk & clkdel1_w & clkdel2_w ;
+
+
+  reg                     clk2;
+  always @ ( negedge clk)
+    clk2<= !clk2;
+
+  assign pi_gpio_14 = filtered_clk_w;
+  assign pmod_gpio[0] = clk2;
+  assign pmod_gpio[1] = clk;
 
 `endif
 

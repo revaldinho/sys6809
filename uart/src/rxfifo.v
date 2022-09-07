@@ -1,7 +1,7 @@
 // FIFOSZ must be >=2
 // total buffer size = FIFOSZ +1, inc. the shift register input buffer
-`define FIFOSZ      3
-`define FIFOPTRSZ   2   // roundup(log2(FIFOSZ))
+`define FIFOSZ      2
+`define FIFOPTRSZ   1   // roundup(log2(FIFOSZ))
 
 module rxfifo
    (
@@ -11,7 +11,6 @@ module rxfifo
     output [7:0] host_dout,
     output       host_dor,
     output       dir,
-    output       empty,
     input        clk,
     input        reset_b
     );
@@ -22,7 +21,6 @@ module rxfifo
    reg [`FIFOPTRSZ-1:0] wptr_q;
    reg [`FIFOPTRSZ-1:0] rptr_q;
 
-   assign empty = !( |valid_q) ; // Signal empty for optional use as CTS
    assign dir = ! ( &valid_q) ; // Ready for input from local receiver if buffer not completely full
    assign host_dor = |valid_q;  // Ready for output to host if buffer has any data at all
    assign host_dout = buffer_q[rptr_q] ;

@@ -107,8 +107,8 @@ module cpld_ram1m_plcc84(
    uart uart_0 (
                 .RXD(tp[0]),
                 .TXD(tp[1]),
-                .CTS_B(tp[2]),
-                .RTS_B(1'b0),
+                .RTS_B(tp[2]),
+                .CTS_B(1'b0),
                 .regsel(adr[0]),
                 .cs_b( uart_cs_b ),
                 .rnw( rnw ),
