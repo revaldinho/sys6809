@@ -5,8 +5,6 @@
 USE 74xx-us ;
 # Memory (inc DIL40)
 USE memory ;
-# PLCC sockets
-USE plcc-socket ;
 # Boxed header connectors
 USE con-3m;
 # Pin headers
@@ -15,8 +13,6 @@ USE pinhead;
 USE rcl;
 # Generic ic-packages
 USE ic-package;
-# SMD caps
-USE wuerth-elektronik ;
 # regulator
 USE holes ;
 USE triac ;

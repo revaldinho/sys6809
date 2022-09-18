@@ -1,4 +1,4 @@
-module m6809_cpu();
+module m68681_uart();
 
   supply1 VDD;
   supply0 GND;

@@ -5,8 +5,6 @@
 USE 74xx-us ;
 # Memory (inc DIL40)
 USE memory ;
-# PLCC sockets
-USE plcc-socket ;
 # Boxed header connectors
 USE con-3m;
 # Pin headers
@@ -15,8 +13,6 @@ USE pinhead;
 USE rcl;
 # Generic ic-packages
 USE ic-package;
-# SMD caps
-USE wuerth-elektronik ;
 # regulator
 USE holes ;
 USE triac ;
@@ -56,38 +52,49 @@ Layer Top;
 # Libraries
 USE con-3m ;
 USE ic-package ;
+USE rcl ;
 USE pinhead ;
-USE resistor ;
 USE switch ;
 USE led ;
+USE switch-dil ;
 USE resistor-sil ;
 
 # Component Instances
 ADD PAK100/2500-50@con-3m CONN0 R0 (2.0 2.0); # idc_hdr_50w
 ADD DIL40@ic-package IC_0 R0 (2.0 2.0); # mc6809
-ADD 1X04@pinhead h_0 R0 (2.0 2.0); # hdr1x04
-ADD C050-025X075@resistor cap_0 R0 (2.0 2.0); # cap18pf
-ADD C050-025X075@resistor cap_1 R0 (2.0 2.0); # cap18pf
+ADD DIL40@ic-package IC_1 R0 (2.0 2.0); # mc68681
+ADD DIL14@ic-package IC_2 R0 (2.0 2.0); # SN7414
+ADD C050-025X075@rcl capx_0 R0 (2.0 2.0); # cap18pf
+ADD C050-025X075@rcl capx_1 R0 (2.0 2.0); # cap18pf
 ADD 1X03@pinhead xtal_0 R0 (2.0 2.0); # hdr1x03
+ADD C050-025X075@rcl capx_02 R0 (2.0 2.0); # cap18pf
+ADD C050-025X075@rcl capx_03 R0 (2.0 2.0); # cap18pf
+ADD 1X03@pinhead xtal_1 R0 (2.0 2.0); # hdr1x03
 ADD 1X03@pinhead lk_0 R0 (2.0 2.0); # hdr1x03
 ADD 1X03@pinhead lk_1 R0 (2.0 2.0); # hdr1x03
-ADD 0204V@resistor res4k7_0 R0 (2.0 2.0); # vresistor
-ADD C050-025X075@resistor cap_2 R0 (2.0 2.0); # cap100nf
+ADD 1X04@pinhead tp_0 R0 (2.0 2.0); # hdr1x04
+ADD 2X08@pinhead gpio_0 R0 (2.0 2.0); # hdr2x08
+ADD 2X05@pinhead uart_0 R0 (2.0 2.0); # hdr2x05
+ADD 0204V@rcl res4k7_0 R0 (2.0 2.0); # vresistor
+ADD C050-025X075@rcl cap_2 R0 (2.0 2.0); # cap100nf
 ADD TL1105@switch switch_0 R0 (2.0 2.0); # TSWITCH
-ADD DIL14@ic-package IC_1 R0 (2.0 2.0); # SN7414
 ADD LED3MM@led led_0 R0 (2.0 2.0); # LED3MM
-ADD SIL9@resistor-sil TSC_PU R0 (2.0 2.0); # r10k_sil9
-ADD 0204V@resistor res100r_0 R0 (2.0 2.0); # vresistor
-ADD 0204V@resistor res100r_1 R0 (2.0 2.0); # vresistor
-ADD 0204V@resistor res100r_2 R0 (2.0 2.0); # vresistor
-ADD 0204V@resistor res100r_3 R0 (2.0 2.0); # vresistor
-ADD 0204V@resistor res100r_4 R0 (2.0 2.0); # vresistor
-ADD 0204V@resistor res100r_5 R0 (2.0 2.0); # vresistor
-ADD 0204V@resistor res100r_6 R0 (2.0 2.0); # vresistor
-ADD 0204V@resistor res100r_7 R0 (2.0 2.0); # vresistor
-ADD C050-025X075@resistor dcap_0 R0 (2.0 2.0); # cap100nf
-ADD C050-025X075@resistor dcap_1 R0 (2.0 2.0); # cap100nf
-ADD E2,5-5@resistor ecap_0 R0 (2.0 2.0); # cap22uf
+ADD SD4-08@switch-dil dip8_0 R0 (2.0 2.0); # DIP8
+ADD SIL9@resistor-sil pu_0 R0 (2.0 2.0); # r10k_sil9
+ADD SIL9@resistor-sil pu_1 R0 (2.0 2.0); # r10k_sil9
+ADD SIL9@resistor-sil pu_2 R0 (2.0 2.0); # r10k_sil9
+ADD 0204V@rcl res100r_0 R0 (2.0 2.0); # vresistor
+ADD 0204V@rcl res100r_1 R0 (2.0 2.0); # vresistor
+ADD 0204V@rcl res100r_2 R0 (2.0 2.0); # vresistor
+ADD 0204V@rcl res100r_3 R0 (2.0 2.0); # vresistor
+ADD 0204V@rcl res100r_4 R0 (2.0 2.0); # vresistor
+ADD 0204V@rcl res100r_5 R0 (2.0 2.0); # vresistor
+ADD 0204V@rcl res100r_6 R0 (2.0 2.0); # vresistor
+ADD 0204V@rcl res100r_7 R0 (2.0 2.0); # vresistor
+ADD C050-025X075@rcl dcap_0 R0 (2.0 2.0); # cap100nf
+ADD C050-025X075@rcl dcap_1 R0 (2.0 2.0); # cap100nf
+ADD C050-025X075@rcl dcap_2 R0 (2.0 2.0); # cap100nf
+ADD E2,5-5@rcl ecap_0 R0 (2.0 2.0); # cap22uf
 
 # Define net classes
 CLASS 0 default ;
@@ -95,54 +102,73 @@ CLASS 1 supply ;
 
 # Define net connections
 change class 0  ;
-SIGNAL E_B_1 IC_1 2 IC_1 3;
-SIGNAL A0 CONN0 33 IC_0 8;
-SIGNAL RST_1 IC_1 6 IC_1 13;
-SIGNAL A1 CONN0 34 IC_0 9;
-SIGNAL NMI_B_PU CONN0 15 IC_0 2 TSC_PU 7;
-SIGNAL A2 CONN0 35 IC_0 10;
-SIGNAL A3 CONN0 36 IC_0 11;
+SIGNAL E_B_1 IC_2 2 IC_2 3;
+SIGNAL UART_OP6_PU IC_1 26 gpio_0 13 pu_2 5;
+SIGNAL UART_IP2_PU IC_1 36 gpio_0 6 dip8_0 1 dip8_0 12;
+SIGNAL A0 CONN0 33 IC_0 8 IC_1 1;
+SIGNAL RST_1 IC_2 6 IC_2 13;
+SIGNAL A1 CONN0 34 IC_0 9 IC_1 3;
+SIGNAL NMI_B_PU CONN0 15 IC_0 2 dip8_0 9 pu_0 7;
+SIGNAL A2 CONN0 35 IC_0 10 IC_1 5;
+SIGNAL A3 CONN0 36 IC_0 11 IC_1 6;
 SIGNAL A4 CONN0 37 IC_0 12;
 SIGNAL A5 CONN0 38 IC_0 13;
 SIGNAL A6 CONN0 39 IC_0 14;
-SIGNAL HALT_B_PU CONN0 13 IC_0 40 TSC_PU 4;
+SIGNAL HALT_B_PU CONN0 13 IC_0 40 pu_0 4;
 SIGNAL A7 CONN0 40 IC_0 15;
-SIGNAL A8 CONN0 41 IC_0 16;
+SIGNAL A8 CONN0 21 IC_0 16;
+SIGNAL A8SYS CONN0 41;
 SIGNAL A9 CONN0 42 IC_0 17;
-SIGNAL RESET_B CONN0 10 IC_0 37 IC_1 12;
+SIGNAL RESET_B CONN0 10 IC_0 37 IC_1 34 IC_2 12;
 SIGNAL A10 CONN0 43 IC_0 18;
 SIGNAL A11 CONN0 44 IC_0 19;
+SIGNAL UART_OP3_PU IC_1 13 gpio_0 7 dip8_0 6 dip8_0 8 dip8_0 7 pu_2 2;
 SIGNAL A12 CONN0 45 IC_0 20;
 SIGNAL A13 CONN0 46 IC_0 21;
 SIGNAL A14 CONN0 47 IC_0 22;
 SIGNAL A15 CONN0 48 IC_0 23;
-SIGNAL Q_B_1 IC_1 10 IC_1 9;
-SIGNAL QCLK CONN0 20 lk_1 2;
-SIGNAL E_0 IC_0 34 lk_0 1 IC_1 1;
-SIGNAL E_2 lk_0 3 IC_1 4;
+SIGNAL RTSB_B IC_1 12 gpio_0 3 uart_0 10;
+SIGNAL Q_B_1 IC_2 10 IC_2 9;
+SIGNAL UART_IP3_PU IC_1 2 gpio_0 8 dip8_0 2 pu_1 4;
+SIGNAL QCLK CONN0 20 lk_1 2 tp_0 4;
+SIGNAL E_0 IC_0 34 IC_2 1 lk_0 1;
+SIGNAL E_2 IC_2 4 lk_0 3;
+SIGNAL RXA IC_1 31 uart_0 5;
 
 change class 1  ;
-SIGNAL GND CONN0 2 CONN0 3 CONN0 4 CONN0 50 CONN0 17 CONN0 49 IC_0 1 h_0 4 cap_0 2 cap_1 2 cap_2 2 switch_0 3 switch_0 4 IC_1 7 led_0 K dcap_0 2 dcap_1 2 ecap_0 -;
+SIGNAL GND CONN0 2 CONN0 3 CONN0 4 CONN0 50 CONN0 17 CONN0 49 IC_0 1 IC_1 20 IC_2 7 capx_0 2 capx_1 2 capx_02 2 capx_03 2 tp_0 1 tp_0 3 gpio_0 14 gpio_0 16 uart_0 1 uart_0 2 cap_2 2 switch_0 3 switch_0 4 led_0 K dip8_0 16 dip8_0 13 dip8_0 14 dip8_0 15 dcap_0 2 dcap_1 2 dcap_2 2 ecap_0 -;
 
 change class 0  ;
-SIGNAL ECLK CONN0 1 h_0 3 lk_0 2;
-SIGNAL IRQ_B_PU CONN0 16 IC_0 3 TSC_PU 5;
-SIGNAL BA IC_0 6 h_0 1;
-SIGNAL FIRQ_B_PU CONN0 23 IC_0 4 TSC_PU 6;
-SIGNAL Q_0 IC_0 35 lk_1 1 IC_1 11;
-SIGNAL Q_2 lk_1 3 IC_1 8;
-SIGNAL LED_PU led_0 A TSC_PU 8 TSC_PU 9;
-SIGNAL RST_B_0 res4k7_0 2 cap_2 1 switch_0 2 switch_0 1 IC_1 5;
-SIGNAL BS IC_0 5 h_0 2;
+SIGNAL TXA IC_1 30 uart_0 3;
+SIGNAL ECLK CONN0 1 lk_0 2 tp_0 2 dip8_0 5;
+SIGNAL RXB IC_1 10 uart_0 6;
+SIGNAL IRQ_B_PU CONN0 16 IC_0 3 IC_1 21 dip8_0 11 pu_0 5;
+SIGNAL BA CONN0 8 IC_0 6;
+SIGNAL TXB IC_1 11 uart_0 4;
+SIGNAL UART_OP4_PU IC_1 27 gpio_0 9 pu_2 3;
+SIGNAL FIRQ_B_PU CONN0 23 IC_0 4 dip8_0 10 pu_0 6;
+SIGNAL Q_0 IC_0 35 IC_2 11 lk_1 1;
+SIGNAL Q_2 IC_2 8 lk_1 3;
+SIGNAL LED_PU led_0 A pu_0 8 pu_0 9;
+SIGNAL IACK_B_PU IC_1 37 pu_1 8;
+SIGNAL RST_B_0 IC_2 5 res4k7_0 2 cap_2 1 switch_0 2 switch_0 1;
+SIGNAL UART_IP4_PU IC_1 39 gpio_0 10 dip8_0 3 pu_1 5 pu_1 6;
+SIGNAL BS CONN0 9 IC_0 5;
+SIGNAL CTSA_B_PU IC_1 7 gpio_0 2 uart_0 7 pu_1 3;
 
 change class 1  ;
-SIGNAL VDD CONN0 5 CONN0 24 IC_0 7 res4k7_0 1 IC_1 14 TSC_PU 1 dcap_0 1 dcap_1 1 ecap_0 +;
+SIGNAL VDD CONN0 5 CONN0 24 IC_0 7 IC_1 40 IC_2 14 res4k7_0 1 pu_0 1 pu_1 1 pu_2 1 dcap_0 1 dcap_1 1 dcap_2 1 ecap_0 +;
 
 change class 0  ;
-SIGNAL XTAL_I IC_0 39 cap_0 1 xtal_0 1;
-SIGNAL XTAL_O IC_0 38 cap_1 1 xtal_0 3;
-SIGNAL BREQ_B_PU CONN0 14 IC_0 33 TSC_PU 3;
+SIGNAL XTAL_I IC_0 39 capx_0 1 xtal_0 1;
+SIGNAL CSUART_B CONN0 22 IC_1 35;
+SIGNAL UART_OP7_PU IC_1 15 gpio_0 15 pu_2 6;
+SIGNAL XTAL_O IC_0 38 capx_1 1 xtal_0 3;
+SIGNAL BREQ_B_PU CONN0 14 IC_0 33 pu_0 3;
+SIGNAL RTSA_B IC_1 29 gpio_0 1 uart_0 9;
 SIGNAL DR1 CONN0 26 res100r_1 2;
+SIGNAL UART_IP5_PU IC_1 38 gpio_0 12 dip8_0 4 pu_1 7;
+SIGNAL UART_OP5_PU IC_1 14 gpio_0 11 pu_2 4;
 SIGNAL DR0 CONN0 25 res100r_0 2;
 SIGNAL DR3 CONN0 28 res100r_3 2;
 SIGNAL DR2 CONN0 27 res100r_2 2;
@@ -150,24 +176,28 @@ SIGNAL DR5 CONN0 30 res100r_5 2;
 SIGNAL DR4 CONN0 29 res100r_4 2;
 SIGNAL DR7 CONN0 32 res100r_7 2;
 SIGNAL DR6 CONN0 31 res100r_6 2;
-SIGNAL D0 IC_0 31 res100r_0 1;
-SIGNAL D1 IC_0 30 res100r_1 1;
-SIGNAL D2 IC_0 29 res100r_2 1;
-SIGNAL D3 IC_0 28 res100r_3 1;
-SIGNAL D4 IC_0 27 res100r_4 1;
-SIGNAL D5 IC_0 26 res100r_5 1;
-SIGNAL D6 IC_0 25 res100r_6 1;
-SIGNAL D7 IC_0 24 res100r_7 1;
-SIGNAL WR_B CONN0 18 IC_0 32;
-SIGNAL MRDY_PU CONN0 12 IC_0 36 TSC_PU 2;
+SIGNAL CTSB_B_PU IC_1 4 gpio_0 4 uart_0 8 pu_1 2;
+SIGNAL D0 IC_0 31 IC_1 25 res100r_0 1;
+SIGNAL UART_X2 IC_1 33 capx_03 1 xtal_1 3;
+SIGNAL D1 IC_0 30 IC_1 16 res100r_1 1;
+SIGNAL UART_X1 IC_1 32 capx_02 1 xtal_1 1;
+SIGNAL D2 IC_0 29 IC_1 24 res100r_2 1;
+SIGNAL D3 IC_0 28 IC_1 17 res100r_3 1;
+SIGNAL D4 IC_0 27 IC_1 23 res100r_4 1;
+SIGNAL D5 IC_0 26 IC_1 18 res100r_5 1;
+SIGNAL D6 IC_0 25 IC_1 22 res100r_6 1;
+SIGNAL UART_OP2 IC_1 28 gpio_0 5;
+SIGNAL D7 IC_0 24 IC_1 19 res100r_7 1;
+SIGNAL WR_B CONN0 18 IC_0 32 IC_1 8;
+SIGNAL MRDY_PU CONN0 12 IC_0 36 pu_0 2;
 change Thermals On ;
 change Isolate 0.015 ;
 change Orphans Off ;
-## Maximum Eagle freeware board size is 4.0x3.2" (100x80mm)
+## Maximum Eagle freeware board size is 4.0x3.2 (100x80mm)
 DRC load /tmp/design_rules;
 
 ## better to work in inches for 0.1 inch pad pitch
-Grid default;
+Grid inch;
 Set Wire_Bend 0;
 Layer Dimension;
 Wire 0  (0 0) (3.9 3.2) (0 0);
@@ -177,8 +207,20 @@ Layer Top;
 CLASS 0 signal 0.010 0.010 ;
 CLASS 1 supply 0.025 0.010 ;
 
+## Move everything into the centre of the board before rotating
+MOVE CONN0  (1.5 1.5);
+MOVE IC_0  (1.5 1.5);
+MOVE IC_1  (1.5 1.5);
+MOVE IC_2  (1.5 1.5);
+MOVE dip8_0  (1.5 1.5);
+
 ##ROTATE =R90 C22UF ;
-ROTATE =R180 CONN1 ;
+ROTATE =R180 CONN0 ;
+ROTATE =R270  IC_0;
+ROTATE =R270  IC_1;
+ROTATE =R270  IC_2;
+ROTATE =R270  dip8_0;
+
 ##ROTATE =R0 DIPSW0 ;
 ##ROTATE =R180 sil0 ;
 ##ROTATE =R270 SRAM0 ;
@@ -194,7 +236,15 @@ ROTATE =R180 CONN1 ;
 ##ROTATE =R270 TESTPT;
 
 ##MOVE C22UF          (3.70 2.40) ;
-MOVE CONN1          (1.85 0.25) ;
+MOVE CONN0          (1.85 0.25) ;
+MOVE IC_0           (0.70 1.70) ;         
+MOVE IC_1           (2.00 1.70) ;         
+MOVE IC_2           (3.00 1.70) ;
+MOVE dcap_0         (0.70 2.80) ;
+MOVE dcap_1         (2.00 2.80) ;
+MOVE dcap_2         (3.00 2.80) ;
+MOVE dip8_0           (3.40 2.60) ;
+
 ##MOVE DIPSW0         (3.40 2.90) ;
 ##MOVE sil0           (3.45 2.65 ) ;
 ##MOVE SRAM0          (0.6 1.65) ;
@@ -230,18 +280,18 @@ wire  'VSS' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
 layer top;
 wire  0.04;
 wire  'VDD' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
-
-## Autorouter
-## AUTO CLK VSS;   ## Route clock and ground first
-AUTO load /tmp/autorouter.ctl;
-AUTO ;
-
-##  Define power fills top and bottom over whole board area
-layer Top ;
-polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
-
-layer Bottom ;
-polygon VSS 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+##-- 
+##-- ## Autorouter
+##-- ## AUTO CLK VSS;   ## Route clock and ground first
+##-- AUTO load /tmp/autorouter.ctl;
+##-- AUTO ;
+##-- 
+##-- ##  Define power fills top and bottom over whole board area
+##-- layer Top ;
+##-- polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+##-- 
+##-- layer Bottom ;
+##-- polygon VSS 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
 
 
 Ratsnest ;  ##  Calculate and display polygons
