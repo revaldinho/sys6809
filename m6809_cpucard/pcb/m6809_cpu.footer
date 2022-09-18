@@ -16,54 +16,37 @@ CLASS 1 supply 0.025 0.010 ;
 MOVE CONN0  (1.5 1.5);
 MOVE IC_0  (1.5 1.5);
 MOVE IC_1  (1.5 1.5);
-MOVE IC_2  (1.5 1.5);
-MOVE dip8_0  (1.5 1.5);
+MOVE dip4_0  (1.5 1.5);
 
-##ROTATE =R90 C22UF ;
+## Rotations
 ROTATE =R180 CONN0 ;
 ROTATE =R270  IC_0;
 ROTATE =R270  IC_1;
-ROTATE =R270  IC_2;
 ROTATE =R270  dip8_0;
 
-##ROTATE =R0 DIPSW0 ;
-##ROTATE =R180 sil0 ;
-##ROTATE =R270 SRAM0 ;
-##ROTATE =R270 SRAM1 ;
-##ROTATE =R270 CPLD ;
-##ROTATE =R0 C100N_1 ;
-##ROTATE =R0 C100N_2 ;
-##ROTATE =R180 C100N_3 ;
-##ROTATE =R0 C100N_4 ;
-##ROTATE =R270 C100N_5 ;
-##ROTATE =R0 JTAG ;
-##ROTATE =R0 GPIO ;
-##ROTATE =R270 TESTPT;
-
-##MOVE C22UF          (3.70 2.40) ;
+## Move to final positions
+MOVE ecap_0         (3.70 2.40) ;
 MOVE CONN0          (1.85 0.25) ;
 MOVE IC_0           (0.70 1.70) ;         
+MOVE capx_0         (1.20 2.5 ) ;
+MOVE xtal_0         (1.20 2.4)  ;
+MOVE capx_0         (1.20 2.3)  ; 
+MOVE tp_0           (1.20 3.2)  ;
+
 MOVE IC_1           (2.00 1.70) ;         
-MOVE IC_2           (3.00 1.70) ;
 MOVE dcap_0         (0.70 2.80) ;
 MOVE dcap_1         (2.00 2.80) ;
-MOVE dcap_2         (3.00 2.80) ;
-MOVE dip8_0           (3.40 2.60) ;
+MOVE dip4_0         (3.40 2.60) ;
 
-##MOVE DIPSW0         (3.40 2.90) ;
-##MOVE sil0           (3.45 2.65 ) ;
-##MOVE SRAM0          (0.6 1.65) ;
-##MOVE SRAM1          (1.5 1.65) ;
-##MOVE CPLD           (2.65 1.55);
-##MOVE C100N_1        (0.8 2.55) ;
-##MOVE C100N_2        (1.7 2.55)  ;
-##MOVE C100N_3        (2.30 2.30)  ;
-##MOVE C100N_4        (2.65 0.8)  ;
-##MOVE C100N_5        (3.45 1.70)  ;
-##MOVE JTAG           (2.65 2.95)  ;
-##MOVE GPIO           (1.20 2.95) ;
-##MOVE TESTPT         (3.70 1.2) ;
+MOV  sil10k_0       (3.0 2.55);
 
+MOVE switch_0        (3.4,1.0) ;
+MOVE cap_2           (3.4 0.7) ;
+MOVE res4k7_0        (3.4 0.4) ;
+MOVE led_0           (3.4 3.0) ;
+
+MOVE lk_0            (2.0 0.5);
+MOVE lk_1            (2.0 0.7);
 
 Layer tPlace ;
 CHANGE FONT PROPORTIONAL ;

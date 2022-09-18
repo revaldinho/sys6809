@@ -10,19 +10,13 @@ module m6809_cpu();
   wire    E_0,E_B_1,E_2,ECLK;
   wire    Q_0,Q_B_1,Q_2,QCLK;
   wire    WR_B;
-  wire    IRQ_B_PU, NMI_B_PU, FIRQ_B_PU;
+  wire    IRQ_B_PU, NMI_B_PU, FIRQ_B_PU, IRQ_B;
   wire    MRDY_PU, BREQ_B_PU, HALT_B_PU;
   wire    RST_B_0, RST_1, RESET_B;
   wire    BS, BA;
   wire    LED_PU;
   wire    XTAL_I, XTAL_O;
   wire    CSUART_B;
-  wire    UART_OP2,UART_OP3_PU,UART_OP4_PU,UART_OP5_PU,UART_OP6_PU,UART_OP7_PU;
-  wire    RTSA_B, RTSB_B, CTSA_B_PU, CTSB_B_PU;
-  wire    RXB, RXA, TXA, TXB;
-  wire    UART_X1, UART_X2;
-  wire    UART_IP2_PU, UART_IP3_PU, UART_IP4_PU, UART_IP5_PU;
-  wire    IACK_B_PU;
 
   //                                                      c   r
   //                 		                          p t a
@@ -47,7 +41,7 @@ module m6809_cpu();
     		   .p22(CSUART_B),    	// (M1_B),    o * o * o : no-connect on CPU card - available for system signals
     		   .p20(QCLK),          //(IOREQ_B),  * * * * * : Use as Q clock
     		   .p18(WR_B), 	        // (WR_B),    * * * * * : WR_B = RNW
-    		   .p16(IRQ_B_PU),      //(INT_B),    o * o * o :
+    		   .p16(IRQ_B),         //(INT_B),    o * o * o :
     		   .p14(BREQ_B_PU),     //(BUSRQ_B),  o * o * o :
     		   .p12(MRDY_PU),       //(READY),    o * * * o :
     		   .p10(RESET_B),       //(RESET_B),  * * * * o :
@@ -107,28 +101,6 @@ module m6809_cpu();
     	       .a12(A12),          .a13(A13)
 	       );
 
-  mc68681 IC_1(
-	       .rs1(A0),               .vdd(VDD),
-	       .ip3_txca(UART_IP3_PU), .ip4_rxcb(UART_IP4_PU),
-	       .rs2(A1),	       .ip5_txcb(UART_IP5_PU),
-	       .ip1_ctsb_b(CTSB_B_PU), .iack_b(IACK_B_PU),
-	       .rs3(A2),               .ip2_rxcb(UART_IP2_PU),
-	       .rs4(A3),               .cs_b(CSUART_B),
-	       .ip0_ctsa_b(CTSA_B_PU), .reset_b(RESET_B),
-	       .rnw(WR_B),             .x2(UART_X2),
-	       .dtack_b(),             .x1_clk(UART_X1),
-	       .rxdb(RXB),             .rxda(RXA),
-	       .txdb(TXB),             .txda(TXA),
-	       .op1_rtsb_b(RTSB_B),    .op0_rtsa_b(RTSA_B),
-	       .op3(UART_OP3_PU),      .op2(UART_OP2),
-	       .op5(UART_OP5_PU),      .op4(UART_OP4_PU),
-	       .op7(UART_OP7_PU),      .op6(UART_OP6_PU),
-	       .d1(D1),                .d0(D0),
-	       .d3(D3),                .d2(D2),
-	       .d5(D5),                .d4(D4),
-	       .d7(D7),                .d6(D6),
-	       .gnd(GND),              .irq_b(IRQ_B_PU)
-	       );
 
   // Schmitt Trigger for buffering
   SN7414 IC_2(
@@ -147,10 +119,6 @@ module m6809_cpu();
   cap18pf   capx_0  ( .p0(XTAL_I), .p1(GND));
   cap18pf   capx_1  ( .p0(XTAL_O), .p1(GND));
   hdr1x03   xtal_0  ( .p1(XTAL_I), .p3(XTAL_O));
-  // UART Oscillator - independent of CPU clock
-  cap18pf   capx_02 ( .p0(UART_X1), .p1(GND));
-  cap18pf   capx_03 ( .p0(UART_X2), .p1(GND));
-  hdr1x03   xtal_1  (.p1(UART_X1), .p2(), .p3(UART_X2));
 
   // Link options - select 6809 clock out or buffered clock
   hdr1x03 lk_0( .p1(E_0),.p2(ECLK),.p3(E_2));
@@ -159,26 +127,6 @@ module m6809_cpu();
   // Test Point for clock
   hdr1x04 tp_0(.p1(GND),.p2(ECLK), .p3(GND), .p4(QCLK));
 
-  // GPIO Header for all UART input/output pins
-  hdr2x08 gpio_0(
-                 .p1(RTSA_B),        .p2(CTSA_B_PU)
-                 .p3(RTSB_B),        .p4(CTSB_B_PU),
-                 .p5(UART_OP2),      .p6(UART_IP2_PU),
-                 .p7(UART_OP3_PU),   .p8(UART_IP3_PU),
-                 .p9(UART_OP4_PU),   .p10(UART_IP4_PU),
-                 .p11(UART_OP5_PU),  .p12(UART_IP5_PU),
-                 .p13(UART_OP6_PU),  .p14(GND),
-                 .p15(UART_OP7_PU),  .p16(GND)
-          );
-
-  // Dual UART Header
-  hdr2x05 uart_0 (
-	          .p1(GND), .p2(GND),
-	          .p3(TXA), .p4(TXB),
-	          .p5(RXA), .p6(RXB),
-	          .p7(CTSA_B_PU), .p8(CTSB_B_PU),
-	          .p9(RTSA_B), .p10(RTSB_B)
-	          );
 
   // Reset button/cap/resistor combination
   vresistor res4k7_0 (.p0(VDD),.p1(RST_B_0));
@@ -192,22 +140,16 @@ module m6809_cpu();
   // Power ON LED
   LED3MM led_0 (.A(LED_PU),.K(GND));
 
-  DIP8 dip8_0(
-              // Use IP2-5 as GP DIP inputs
-              .sw0_a(UART_IP2_PU), .sw0_b(GND),
-              .sw1_a(UART_IP3_PU), .sw1_b(GND),
-              .sw2_a(UART_IP4_PU), .sw2_b(GND),
-              .sw3_a(UART_IP5_PU), .sw3_b(GND),
-              // allow use of E as CTC clock input
-              .sw4_a(ECLK),.sw4_b(UART_IP2_PU),
-              // IRQ connector for counter interrupt - set one switch to enable CTC interrupts
-              .sw5_a(UART_OP3_PU),.sw5_b(IRQ_B_PU),
-              .sw6_a(UART_OP3_PU),.sw6_b(FIRQ_B_PU),
-              .sw7_a(UART_OP3_PU),.sw7_b(NMI_B_PU),
+  DIP8 dip4_0(
+              // DIP1 to physically disconnect IRQ_B
+              .sw0_a(IRQ_B), .sw0_b(IRQ_B_PU),
+              .sw1_a(),.sw1_b(),
+              .sw2_a(),.sw2_b(),
+              .sw3_a(),.sw3_b(),
               );
 
   // Misc pull-ups
-  r10k_sil9 pu_0(
+  r10k_sil9 sil10k_0(
     		 .common(VDD),
     		 .p0(MRDY_PU),
     		 .p1(BREQ_B_PU),
@@ -218,32 +160,6 @@ module m6809_cpu();
     		 .p6(LED_PU), // Eff. 5Kohm for LED PU
 		 .p7(LED_PU)
     		 );
-
-  // Relatively high value PU on these inputs to hold static voltages, but
-  // not interfere with DIP settings and  driven logic (or clock) timing into the UART
-  r10k_sil9 pu_1 (
-                  .common(VDD),
-                  .p0(CTSB_B_PU),
-                  .p1(CTSA_B_PU),
-                  .p2(UART_IP3_PU),
-                  .p3(UART_IP4_PU),
-                  .p4(UART_IP4_PU),
-                  .p5(UART_IP5_PU),
-                  .p6(IACK_B_PU),
-                  .p7()
-                  );
-  r10k_sil9 pu_2 (
-                  .common(VDD),
-                  .p0(UART_OP3_PU),
-                  .p1(UART_OP4_PU),
-                  .p2(UART_OP5_PU),
-                  .p3(UART_OP6_PU),
-                  .p4(UART_OP7_PU),
-                  .p5(),
-                  .p6(),
-                  .p7(),
-                  );
-
 
   // current limiting resistors on databus
   vresistor res100r_0 (.p0(D0), .p1(DR0));
@@ -258,7 +174,6 @@ module m6809_cpu();
   // IC decoupling
   cap100nf dcap_0 ( .p0(VDD), .p1(GND) );
   cap100nf dcap_1 ( .p0(VDD), .p1(GND) );
-  cap100nf dcap_2 ( .p0(VDD), .p1(GND) );
 
   //board decoupling
   cap22uf ecap_0  (.plus(VDD), .minus(GND) );

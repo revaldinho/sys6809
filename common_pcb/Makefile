@@ -1,4 +1,4 @@
-netlister_dir ?= ~/Documents/nas/Development/git/netlister
+netlister_dir ?= ~/iCloudDrive/Development/git/netlister
 
 ALLLIBS ?= $(shell ls -1 ${netlister_dir}/lib/*.lib)
 
@@ -25,7 +25,7 @@ ARGS ?=
 	-o $*.net \
 	-f net
 
-%.scr : %.v_cpp ${ALLLIBS} %.footer_cpp ./common.header
+%.scr : %.v_cpp ${ALLLIBS} %.footer_cpp ../../common_pcb/common.header
 	netlister.py \
 	-i $*.v_cpp \
 	-l ${netlister_dir}/lib/memory.lib \
@@ -42,7 +42,7 @@ ARGS ?=
 	-o $*.scr \
 	-f scr \
 	-u \
-	-d ./common.header \
+	-d ../../common_pcb/common.header \
 	-t $*.footer_cpp
 
 

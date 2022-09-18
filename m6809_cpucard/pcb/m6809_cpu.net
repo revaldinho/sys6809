@@ -9,38 +9,24 @@ Net                   Part                  Pad
 E_B_1                 IC_2                  2                   
                       IC_2                  3                   
 
-UART_OP6_PU           IC_1                  26                  
-                      gpio_0                13                  
-                      pu_2                  5                   
-
-UART_IP2_PU           IC_1                  36                  
-                      gpio_0                6                   
-                      dip8_0                1                   
-                      dip8_0                12                  
-
 A0                    CONN0                 33                  
                       IC_0                  8                   
-                      IC_1                  1                   
 
 RST_1                 IC_2                  6                   
                       IC_2                  13                  
 
 A1                    CONN0                 34                  
                       IC_0                  9                   
-                      IC_1                  3                   
 
 NMI_B_PU              CONN0                 15                  
                       IC_0                  2                   
-                      dip8_0                9                   
-                      pu_0                  7                   
+                      sil10k_0              7                   
 
 A2                    CONN0                 35                  
                       IC_0                  10                  
-                      IC_1                  5                   
 
 A3                    CONN0                 36                  
                       IC_0                  11                  
-                      IC_1                  6                   
 
 A4                    CONN0                 37                  
                       IC_0                  12                  
@@ -53,7 +39,7 @@ A6                    CONN0                 39
 
 HALT_B_PU             CONN0                 13                  
                       IC_0                  40                  
-                      pu_0                  4                   
+                      sil10k_0              4                   
 
 A7                    CONN0                 40                  
                       IC_0                  15                  
@@ -68,21 +54,16 @@ A9                    CONN0                 42
 
 RESET_B               CONN0                 10                  
                       IC_0                  37                  
-                      IC_1                  34                  
                       IC_2                  12                  
+
+IRQ_B                 CONN0                 16                  
+                      dip4_0                1                   
 
 A10                   CONN0                 43                  
                       IC_0                  18                  
 
 A11                   CONN0                 44                  
                       IC_0                  19                  
-
-UART_OP3_PU           IC_1                  13                  
-                      gpio_0                7                   
-                      dip8_0                6                   
-                      dip8_0                8                   
-                      dip8_0                7                   
-                      pu_2                  2                   
 
 A12                   CONN0                 45                  
                       IC_0                  20                  
@@ -96,17 +77,8 @@ A14                   CONN0                 47
 A15                   CONN0                 48                  
                       IC_0                  23                  
 
-RTSB_B                IC_1                  12                  
-                      gpio_0                3                   
-                      uart_0                10                  
-
 Q_B_1                 IC_2                  10                  
                       IC_2                  9                   
-
-UART_IP3_PU           IC_1                  2                   
-                      gpio_0                8                   
-                      dip8_0                2                   
-                      pu_1                  4                   
 
 QCLK                  CONN0                 20                  
                       lk_1                  2                   
@@ -119,9 +91,6 @@ E_0                   IC_0                  34
 E_2                   IC_2                  4                   
                       lk_0                  3                   
 
-RXA                   IC_1                  31                  
-                      uart_0                5                   
-
 GND                   CONN0                 2                   
                       CONN0                 3                   
                       CONN0                 4                   
@@ -129,62 +98,33 @@ GND                   CONN0                 2
                       CONN0                 17                  
                       CONN0                 49                  
                       IC_0                  1                   
-                      IC_1                  20                  
                       IC_2                  7                   
                       capx_0                2                   
                       capx_1                2                   
-                      capx_02               2                   
-                      capx_03               2                   
                       tp_0                  1                   
                       tp_0                  3                   
-                      gpio_0                14                  
-                      gpio_0                16                  
-                      uart_0                1                   
-                      uart_0                2                   
                       cap_2                 2                   
                       switch_0              3                   
                       switch_0              4                   
                       led_0                 K                   
-                      dip8_0                16                  
-                      dip8_0                13                  
-                      dip8_0                14                  
-                      dip8_0                15                  
                       dcap_0                2                   
                       dcap_1                2                   
-                      dcap_2                2                   
                       ecap_0                -                   
-
-TXA                   IC_1                  30                  
-                      uart_0                3                   
 
 ECLK                  CONN0                 1                   
                       lk_0                  2                   
                       tp_0                  2                   
-                      dip8_0                5                   
 
-RXB                   IC_1                  10                  
-                      uart_0                6                   
-
-IRQ_B_PU              CONN0                 16                  
-                      IC_0                  3                   
-                      IC_1                  21                  
-                      dip8_0                11                  
-                      pu_0                  5                   
+IRQ_B_PU              IC_0                  3                   
+                      dip4_0                16                  
+                      sil10k_0              5                   
 
 BA                    CONN0                 8                   
                       IC_0                  6                   
 
-TXB                   IC_1                  11                  
-                      uart_0                4                   
-
-UART_OP4_PU           IC_1                  27                  
-                      gpio_0                9                   
-                      pu_2                  3                   
-
 FIRQ_B_PU             CONN0                 23                  
                       IC_0                  4                   
-                      dip8_0                10                  
-                      pu_0                  6                   
+                      sil10k_0              6                   
 
 Q_0                   IC_0                  35                  
                       IC_2                  11                  
@@ -194,11 +134,8 @@ Q_2                   IC_2                  8
                       lk_1                  3                   
 
 LED_PU                led_0                 A                   
-                      pu_0                  8                   
-                      pu_0                  9                   
-
-IACK_B_PU             IC_1                  37                  
-                      pu_1                  8                   
+                      sil10k_0              8                   
+                      sil10k_0              9                   
 
 RST_B_0               IC_2                  5                   
                       res4k7_0              2                   
@@ -206,32 +143,17 @@ RST_B_0               IC_2                  5
                       switch_0              2                   
                       switch_0              1                   
 
-UART_IP4_PU           IC_1                  39                  
-                      gpio_0                10                  
-                      dip8_0                3                   
-                      pu_1                  5                   
-                      pu_1                  6                   
-
 BS                    CONN0                 9                   
                       IC_0                  5                   
-
-CTSA_B_PU             IC_1                  7                   
-                      gpio_0                2                   
-                      uart_0                7                   
-                      pu_1                  3                   
 
 VDD                   CONN0                 5                   
                       CONN0                 24                  
                       IC_0                  7                   
-                      IC_1                  40                  
                       IC_2                  14                  
                       res4k7_0              1                   
-                      pu_0                  1                   
-                      pu_1                  1                   
-                      pu_2                  1                   
+                      sil10k_0              1                   
                       dcap_0                1                   
                       dcap_1                1                   
-                      dcap_2                1                   
                       ecap_0                +                   
 
 XTAL_I                IC_0                  39                  
@@ -239,11 +161,6 @@ XTAL_I                IC_0                  39
                       xtal_0                1                   
 
 CSUART_B              CONN0                 22                  
-                      IC_1                  35                  
-
-UART_OP7_PU           IC_1                  15                  
-                      gpio_0                15                  
-                      pu_2                  6                   
 
 XTAL_O                IC_0                  38                  
                       capx_1                1                   
@@ -251,23 +168,10 @@ XTAL_O                IC_0                  38
 
 BREQ_B_PU             CONN0                 14                  
                       IC_0                  33                  
-                      pu_0                  3                   
-
-RTSA_B                IC_1                  29                  
-                      gpio_0                1                   
-                      uart_0                9                   
+                      sil10k_0              3                   
 
 DR1                   CONN0                 26                  
                       res100r_1             2                   
-
-UART_IP5_PU           IC_1                  38                  
-                      gpio_0                12                  
-                      dip8_0                4                   
-                      pu_1                  7                   
-
-UART_OP5_PU           IC_1                  14                  
-                      gpio_0                11                  
-                      pu_2                  4                   
 
 DR0                   CONN0                 25                  
                       res100r_0             2                   
@@ -290,58 +194,33 @@ DR7                   CONN0                 32
 DR6                   CONN0                 31                  
                       res100r_6             2                   
 
-CTSB_B_PU             IC_1                  4                   
-                      gpio_0                4                   
-                      uart_0                8                   
-                      pu_1                  2                   
-
 D0                    IC_0                  31                  
-                      IC_1                  25                  
                       res100r_0             1                   
 
-UART_X2               IC_1                  33                  
-                      capx_03               1                   
-                      xtal_1                3                   
-
 D1                    IC_0                  30                  
-                      IC_1                  16                  
                       res100r_1             1                   
 
-UART_X1               IC_1                  32                  
-                      capx_02               1                   
-                      xtal_1                1                   
-
 D2                    IC_0                  29                  
-                      IC_1                  24                  
                       res100r_2             1                   
 
 D3                    IC_0                  28                  
-                      IC_1                  17                  
                       res100r_3             1                   
 
 D4                    IC_0                  27                  
-                      IC_1                  23                  
                       res100r_4             1                   
 
 D5                    IC_0                  26                  
-                      IC_1                  18                  
                       res100r_5             1                   
 
 D6                    IC_0                  25                  
-                      IC_1                  22                  
                       res100r_6             1                   
 
-UART_OP2              IC_1                  28                  
-                      gpio_0                5                   
-
 D7                    IC_0                  24                  
-                      IC_1                  19                  
                       res100r_7             1                   
 
 WR_B                  CONN0                 18                  
                       IC_0                  32                  
-                      IC_1                  8                   
 
 MRDY_PU               CONN0                 12                  
                       IC_0                  36                  
-                      pu_0                  2                   
+                      sil10k_0              2                   
