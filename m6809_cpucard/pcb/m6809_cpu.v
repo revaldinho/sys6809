@@ -103,13 +103,13 @@ module m6809_cpu();
 
 
   // Schmitt Trigger for buffering
-  SN7414 IC_2(
+  SN7414 IC_1(
 	      .i0(E_0),     .vdd(VDD),
-	      .o0(E_B_1),   .i3(RST_1),
-	      .i1(E_B_1),   .o3(RESET_B),
-	      .o1(E_2),     .i4(Q_0),
-	      .i2(RST_B_0), .o4(Q_B_1),
-	      .o2(RST_1),   .i5(Q_B_1),
+	      .o0(E_B_1),   .i3(RST_B_0),
+	      .i1(E_B_1),   .o3(RST_1),
+	      .o1(E_2),     .i4(RST_1),
+	      .i2(Q_0),     .o4(RESET_B),
+	      .o2(Q_B_1),   .i5(Q_B_1),
 	      .vss(GND),    .o5(Q_2)
 	      );
 
@@ -129,7 +129,7 @@ module m6809_cpu();
 
 
   // Reset button/cap/resistor combination
-  vresistor res4k7_0 (.p0(VDD),.p1(RST_B_0));
+  resistor res4k7_0 (.p0(VDD),.p1(RST_B_0));
   cap100nf cap_2( .p0(RST_B_0), .p1(GND));
 
   TSWITCH switch_0 (
@@ -140,7 +140,7 @@ module m6809_cpu();
   // Power ON LED
   LED3MM led_0 (.A(LED_PU),.K(GND));
 
-  DIP8 dip4_0(
+  DIP4 dip4_0(
               // DIP1 to physically disconnect IRQ_B
               .sw0_a(IRQ_B), .sw0_b(IRQ_B_PU),
               .sw1_a(),.sw1_b(),

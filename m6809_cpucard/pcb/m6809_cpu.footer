@@ -12,41 +12,60 @@ Layer Top;
 CLASS 0 signal 0.010 0.010 ;
 CLASS 1 supply 0.025 0.010 ;
 
-## Move everything into the centre of the board before rotating
-MOVE CONN0  (1.5 1.5);
-MOVE IC_0  (1.5 1.5);
-MOVE IC_1  (1.5 1.5);
-MOVE dip4_0  (1.5 1.5);
-
 ## Rotations
 ROTATE =R180 CONN0 ;
 ROTATE =R270  IC_0;
 ROTATE =R270  IC_1;
-ROTATE =R270  dip8_0;
+ROTATE =R270  dip4_0;
+ROTATE =R180  dcap_0;
+ROTATE =R180  dcap_1;
+ROTATE =R270   xtal_0;
+ROTATE =R270   sil10k_0;
+ROTATE =R180  ecap_0;
+ROTATE =R90  switch_0;
+
+ROTATE =R270  res100r_0;
+ROTATE =R270  res100r_1;
+ROTATE =R270  res100r_2;
+ROTATE =R270  res100r_3;
+ROTATE =R270  res100r_4;
+ROTATE =R270  res100r_5;
+ROTATE =R270  res100r_6;
+ROTATE =R270  res100r_7;
+ROTATE =R180  res4k7_0;
 
 ## Move to final positions
 MOVE ecap_0         (3.70 2.40) ;
 MOVE CONN0          (1.85 0.25) ;
-MOVE IC_0           (0.70 1.70) ;         
-MOVE capx_0         (1.20 2.5 ) ;
-MOVE xtal_0         (1.20 2.4)  ;
-MOVE capx_0         (1.20 2.3)  ; 
-MOVE tp_0           (1.20 3.2)  ;
+MOVE IC_0           (0.60 1.90) ;         
+MOVE capx_0         (1.50 2.8 ) ;
+MOVE xtal_0         (1.20 2.7)  ;
+MOVE capx_1         (1.50 2.6)  ; 
+MOVE tp_0           (2.60 3.0)  ;
 
-MOVE IC_1           (2.00 1.70) ;         
-MOVE dcap_0         (0.70 2.80) ;
-MOVE dcap_1         (2.00 2.80) ;
-MOVE dip4_0         (3.40 2.60) ;
+MOVE IC_1           (2.00 2.20) ;         
+MOVE dcap_0         (0.60 3.00) ;
+MOVE dcap_1         (2.00 3.00) ;
 
-MOV  sil10k_0       (3.0 2.55);
+MOVE dip4_0          (3.5 2.6) ;
+MOVE sil10k_0        (3.5 1.8);
+MOVE switch_0        (3.5 1.0) ;
+MOVE res4k7_0        (3.5 0.8);
+MOVE cap_2           (3.5 0.6) ;
+MOVE led_0           (3.5 3.0);
+MOVE lk_0            (2.0 1.5);
+MOVE lk_1            (2.0 1.3);
+MOVE ecap_0          (3.7 0.3);
 
-MOVE switch_0        (3.4,1.0) ;
-MOVE cap_2           (3.4 0.7) ;
-MOVE res4k7_0        (3.4 0.4) ;
-MOVE led_0           (3.4 3.0) ;
+MOVE res100r_7       (1.3 0.6);
+MOVE res100r_6       (1.4 0.6);
+MOVE res100r_5       (1.5 0.6);
+MOVE res100r_4       (1.6 0.6);
+MOVE res100r_3       (1.7 0.6);
+MOVE res100r_2       (1.8 0.6);
+MOVE res100r_1       (1.9 0.6);
+MOVE res100r_0       (2.0 0.6);
 
-MOVE lk_0            (2.0 0.5);
-MOVE lk_1            (2.0 0.7);
 
 Layer tPlace ;
 CHANGE FONT PROPORTIONAL ;
@@ -64,22 +83,22 @@ TEXT '(C) 2022 Revaldinho, github.com/revaldinho/sys6809'  R90      (0.2 0.2) ;
 ## Preroute VDD and VSS rings and some spurs
 layer bottom;
 wire  0.04;
-wire  'VSS' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
+wire  'GND' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
 layer top;
 wire  0.04;
 wire  'VDD' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
-##-- 
-##-- ## Autorouter
-##-- ## AUTO CLK VSS;   ## Route clock and ground first
-##-- AUTO load /tmp/autorouter.ctl;
-##-- AUTO ;
-##-- 
-##-- ##  Define power fills top and bottom over whole board area
-##-- layer Top ;
-##-- polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
-##-- 
-##-- layer Bottom ;
-##-- polygon VSS 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+ 
+## Autorouter
+## AUTO CLK GND;   ## Route clock and ground first
+AUTO load /tmp/autorouter.ctl;
+AUTO ;
+
+##  Define power fills top and bottom over whole board area
+layer Top ;
+polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+
+layer Bottom ;
+polygon GND 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
 
 
 Ratsnest ;  ##  Calculate and display polygons
