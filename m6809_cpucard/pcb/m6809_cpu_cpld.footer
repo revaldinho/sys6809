@@ -1,0 +1,135 @@
+## Maximum Eagle freeware board size is 4.0x3.2 (100x80mm)
+DRC load /tmp/design_rules;
+
+## better to work in inches for 0.1 inch pad pitch
+Grid inch;
+Set Wire_Bend 0;
+Layer Dimension;
+Wire 0  (0 0) (3.9 3.2) (0 0);
+Layer Top;
+
+## PCB-Pool/PCB-Train design rule is actually 0.006/0.006 for wires
+CLASS 0 signal 0.010 0.010 ;
+CLASS 1 supply 0.025 0.010 ;
+
+## Rotations
+ROTATE =R180 CONN0 ;
+ROTATE =R270  IC0;
+ROTATE =R270  IC1;
+ROTATE =R270  IC2;
+ROTATE =R270  OSC0;
+ROTATE =R270  OSC1;
+ROTATE =R270  CPLD;
+ROTATE =R270  TP0;
+ROTATE =R270  lk0;
+ROTATE =R270  JTAG;
+ROTATE =R90   sw0;
+ROTATE =R0    led;
+ROTATE =R0    r2k2;
+ROTATE =R270  dip2;
+ROTATE =R270  sil10k;
+ROTATE =R180  C0;
+ROTATE =R180  C1;
+ROTATE =R180  C2;
+ROTATE =R180  C3;
+ROTATE =R180  C4;
+ROTATE =R180  C5;
+ROTATE =R180  C6;
+ROTATE =R180  C7;
+ROTATE =R180  C8;
+ROTATE =R270  r100_0;
+ROTATE =R270  r100_1;
+ROTATE =R270  r100_2;
+ROTATE =R270  r100_3;
+ROTATE =R270  r100_4;
+ROTATE =R270  r100_5;
+ROTATE =R270  r100_6;
+ROTATE =R270  r100_7;
+
+## Move to Final positions
+MOVE CONN0          (1.85 0.25) ;
+
+## Column 1
+MOVE C0             (0.60 3.0) ;
+MOVE IC0            (0.60 1.9) ;
+
+## Column 2
+MOVE C1             (1.30 3.0) ;
+MOVE IC1            (1.30 2.6) ;
+MOVE C2             (1.30 2.1) ;
+MOVE IC2            (1.30 1.7) ;
+MOVE C3             (1.30 1.2) ;
+MOV  OSC0           (1.30 0.8) ;
+
+## Column 3
+MOVE C4              (2.2 3.0) ;
+MOVE OSC1            (2.2 2.6) ;
+
+MOV  C5              (2.2 2.0) ;
+MOV  CPLD            (2.2 1.3) ;
+MOV  C6              (2.2 0.8) ;
+
+## Column 4
+MOVE led             (3.1 3.0) ;
+MOVE dip2            (3.1 2.6) ;
+MOVE sil10k          (3.1 1.8) ;
+MOVE sw0             (3.1 1.0) ;
+MOVE r10k            (3.1 0.8) ;
+MOVE C8              (3.1 0.6) ;
+
+## Connectors on RH edge
+MOVE JTAG            (3.7 2.8) ;
+MOVE TP0             (3.7 2.0) ;
+MOVE lk0             (3.7 1.0) ;
+
+MOVE C7              (3.7 0.3) ;
+
+## Resistors near bottom Connector
+MOVE r100_7       (1.3 0.6) ;
+MOVE r100_6       (1.4 0.6) ;
+MOVE r100_5       (1.5 0.6) ;
+MOVE r100_4       (1.6 0.6) ;
+MOVE r100_3       (1.7 0.6) ;
+MOVE r100_2       (1.8 0.6) ;
+MOVE r100_1       (1.9 0.6) ;
+MOVE r100_0       (2.0 0.6) ;
+
+
+Layer tPlace ;
+CHANGE FONT PROPORTIONAL ;
+CHANGE SIZE 0.06
+TEXT 'MC6809 CPU Card v1.00' R90 (0.10 0.2) ;
+CHANGE SIZE 0.04
+TEXT '(C) 2022 Revaldinho, github.com/revaldinho/sys6809'  R90      (0.2 0.2) ;
+
+## WIRE  (0.1 2.91) (0.1 3.05 ) (0.78 3.05 ) (0.78 2.91) (0.1 2.91 ) ;
+## TEXT 'PIO0 PIO2 PIO4 PIO6 VDD' R0 (0.13 3.00) ;
+## TEXT 'GND  PIO1 PIO3 PIO5 PIO7' R0 (0.13 2.95) ;
+##
+## TEXT 'GND  TP4 TP3 TP2 TP1 TP0' R90 (3.60 0.90) ;
+
+## Preroute VDD and VSS rings and some spurs
+layer bottom;
+wire  0.04;
+wire  'GND' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
+layer top;
+wire  0.04;
+wire  'VDD' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
+
+##--## Autorouter
+##--## AUTO CLK GND;   ## Route Clock and ground first
+##--AUTO load /tmp/autorouter.ctl;
+##--AUTO ;
+##--
+##--##  Define power fills top and bottom over whole board area
+##--layer Top ;
+##--polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+##--
+##--layer Bottom ;
+##--polygon GND 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+##--
+##--
+##--Ratsnest ;  ##  Calculate and display polygons
+
+
+Window Fit;
