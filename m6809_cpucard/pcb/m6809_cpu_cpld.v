@@ -1,26 +1,27 @@
+
 module m6809_cpu_cpld();
 
   supply1 VDD;
   supply0 GND;
 
-  wire    A15,A14,A13,A12,A11,A10,A9,A8,A7,A6,A5,A4,A3,A2,A1,A0, A8_B;
+  wire    A15,A14,A13,A12,A11,A10,A9,A8,A7,A6,A5,A4,A3,A2,A1,A0;
   wire    D7,D6,D5,D4,D3,D2,D1,D0;
   wire    DR7,DR6,DR5,DR4,DR3,DR2,DR1,DR0;
-  wire    ECLK, ECLK_B, ECLK_BUF, QCLK;
+  wire    ECLK, QCLK, ECLK_LPF;
   wire    RNW;
   wire    IRQ_B_PU, NMI_B_PU, FIRQ_B_PU;
-  wire    MRDY_BUSY_PU, BREQ_B_AVMA_PU, HALT_B_PU;
-  wire    RST_B_0, RST_1, RESET_B;
+  wire    MRDY_PU, BREQ_B_PU, HALT_B_PU;
+  wire    RST_B;
   wire    BS, BA, IACK_B;
   wire    LED_PU;
   wire    CSUART_B, CSIO_B;
   wire    DIP0, DIP1;
   wire    TDO, TMS, TDI, TCK;
-  wire    ROMEN_B, RFSH_B, ROMDIS;
-  wire    SYS_A8, SYS_ECLK, SYS_MRDY, SYS_BREQ_B, DECODE_FE_B;
-  wire    EXTAL_LIC_CPU, XTAL_TSC_CPU;
-  wire    HSCLK;
-  wire    ALTCLK, ALTCLKOUT;
+  wire    SYS_A8, SYS_ECLK;
+  wire    HSCLK, AUXCLK;
+  wire    CPC_BUSRST_B, CPC_ROMEN_B, CPC_ROMDIS;
+  wire    BUSACK_B, SW_RST_B;
+  wire    SYS_Q_AUXCLK;
 
   //                                                      c   r
   //                 		                          p t a
@@ -43,13 +44,13 @@ module m6809_cpu_cpld();
     		    .p26(DR1),    	// (D1),      * * * * * :
     		    .p24(VDD),     	// (VDD),     * * * * * :
     		    .p22(CSUART_B),    	// (M1_B),    o * o * o : no-connect on CPU card - available for system signals
-    		    .p20(QCLK),         //(IOREQ_B),  * * * * * : Use as Q clock
+    		    .p20(SYS_Q_AUXCLK), //(IOREQ_B),  * * * * * : Use as Q clock
     		    .p18(RNW), 	        // (WR_B),    * * * * * : WR_B = RNW
     		    .p16(IRQ_B_PU),     //(INT_B),    o * o * o :
-    		    .p14(SYS_BREQ_B),   //(BUSRQ_B),  o * o * o :
-    		    .p12(SYS_MRDY),     //(READY),    o * * * o :
-    		    .p10(RESET_B),      //(RESET_B),  * * * * o :
-    		    .p8 (ROMDIS),       //(ROMDIS),   * * o o o :
+    		    .p14(BREQ_B_PU),    //(BUSRQ_B),  o * o * o :
+    		    .p12(MRDY_PU),      //(READY),    o * * * o :
+    		    .p10(RST_B),        //(RST_B),  * * * * o :
+    		    .p8 (CPC_ROMDIS),       //(ROMDIS),   * * o o o :
     		    .p6 (HALT_B_PU),    //(RAMDIS),   o * o o * : no-connect on CPU card - available for system signals
     		    .p4 (GND),          //(LPEN),     o o o o o : LPEN not connected - use as additional GND
     		    .p2 (GND),	        // (VSS),     * * * * * :
@@ -67,30 +68,30 @@ module m6809_cpu_cpld();
 		    .p29(DR4),	        //(D4),       * * * * * :
 		    .p27(DR2),	        //(D2),       * * * * * :
 		    .p25(DR0),	        //(D0),       * * * * * :
-		    .p23(FIRQ_B_PU),     //(MREQ_B),   * * * * * :
-		    .p21(RFSH_B),        //(RFSH_B),   o * o o * :
-		    .p19(CSIO_B),	//(RD_B),     * * * * * :
-		    .p17(VDD),              //(HALT_B),   o o o o o : HALT Never connected - reuse as additional VDD
-		    .p15(NMI_B_PU),      //(NMI_B),    o * o o o :
-		    .p13(IACK_B),        //(BUSACK_B), o * o * o :
-		    .p11(ALTCLKOUT),     //(BUSRESET_B)o * o o * : no-connect on CPU card - available for system signals
-		    .p9 (ROMEN_B),       //(ROMEN_B),  * * o o o :
-		    .p7 (A8),	         //(RAMRD_B),  o * o o * : no-connect on CPU card - available for system signals
-		    .p5 (VDD),           //(CURSOR),   o o o o o : CURSOR not connected - reused as additional VDD
-		    .p3 (GND),           //(EXP_B),    o o o o o : EXP_B not connected - reused as additional GND
-		    .p1 (SYS_ECLK)       //(CLK),      * * * * * :
+		    .p23(FIRQ_B_PU),    //(MREQ_B),   * * * * * :
+		    .p21(IACK_B),       //(RFSH_B),   o * o o * :
+		    .p19(CSIO_B),  	//(RD_B),     * * * * * :
+		    .p17(VDD),          //(HALT_B),   o o o o o : HALT Never connected - reuse as additional VDD
+		    .p15(NMI_B_PU),     //(NMI_B),    o * o o o :
+		    .p13(BUSACK_B),     //(BUSACK_B), o * o * o :
+		    .p11(CPC_BUSRST_B), //(BUSRST_B), o * o o * : no-connect on CPU card - available for system signals
+		    .p9 (CPC_ROMEN_B),      //(ROMEN_B),  * * o o o :
+		    .p7 (A8),	        //(RAMRD_B),  o * o o * : no-connect on CPU card - available for system signals
+		    .p5 (VDD),          //(CURSOR),   o o o o o : CURSOR not connected - reused as additional VDD
+		    .p3 (GND),          //(EXP_B),    o o o o o : EXP_B not connected - reused as additional GND
+		    .p1 (SYS_ECLK)      //(CLK),      * * * * * :
 		    );
 
 
   mc6809 IC0 (
     	      .vss(GND ),         .haltb(HALT_B_PU),
-    	      .nmib(NMI_B_PU ),   .xtal(XTAL_TSC_CPU),
-    	      .irqb(IRQ_B_PU ),   .extal(EXTAL_LIC_CPU),
-    	      .firqb(FIRQ_B_PU ), .resetb(RESET_B),
-    	      .bs(BS),            .mrdy(MRDY_BUSY_PU),
+    	      .nmib(NMI_B_PU ),   .xtal(GND),
+    	      .irqb(IRQ_B_PU ),   .extal(HSCLK),
+    	      .firqb(FIRQ_B_PU ), .resetb(RST_B),
+    	      .bs(BS),            .mrdy(MRDY_PU),
     	      .ba(BA),            .q(QCLK),
     	      .vcc(VDD),          .e(ECLK),
-    	      .a0(A0),            .dma_breqb(BREQ_B_AVMA_PU),
+    	      .a0(A0),            .dma_breqb(BREQ_B_PU),
     	      .a1(A1),            .rnw(RNW),
     	      .a2(A2),            .d0(D0),
     	      .a3(A3),            .d1(D1),
@@ -105,31 +106,6 @@ module m6809_cpu_cpld();
     	      .a12(A12),          .a13(A13)
 	      );
 
-  // Schmitt Trigger for buffering
-  SN7414 IC1(
-	     .i0(ECLK),    .vdd(VDD),
-	     .o0(ECLK_B),  .i3(ECLK_B),
-	     .i1(RST_B_0), .o3(ECLK_BUF),
-	     .o1(RST_1),   .i4(A8),
-	     .i2(RST_1),   .o4(A8_B),
-	     .o2(RESET_B), .i5(GND),
-	     .vss(GND),    .o5()
-	     );
-
-  // Partial Decode of top byte for IO addressing
-  SN7430 IC2 (.vdd(VDD),
-              .i0(A15),
-              .i1(A14),
-              .i2(A13),
-              .i3(A12),
-              .i4(A11),
-              .i5(A10),
-              .i6(A9),
-              .i7(A8_B),
-              .o(DECODE_FE_B),
-              .vss(GND)
-              );
-
   // Socket for CMOS oscillator
   cmos_osc_14 OSC0 (
                     .gnd(GND),
@@ -143,59 +119,63 @@ module m6809_cpu_cpld();
                     .gnd(GND),
                     .vdd(VDD),
                     .en(VDD),
-                    .clk(ALTCLK)
+                    .clk(AUXCLK)
                     );
 
   // CPLD44 for programmable control logic
   xc9572pc44  CPLD (
-                    .p1(EXTAL_LIC_CPU),
-                    .p2(ECLK),    // E from or to CPU
-                    .p3(QCLK),    // Q from or to CPU
-                    .p4(XTAL_TSC_CPU),
-                    .gck1(HSCLK), // incoming oscillator clock
-                    .gck2(BS),
-                    .gck3(BA),
-                    .p8(BREQ_B_AVMA_PU),
-                    .p9(A5),
+                    .p1(BA),
+                    .p2(BS),
+                    .p3(QCLK),
+                    .p4(A5),
+                    .gck1(ECLK_LPF),
+                    .gck2(AUXCLK),
+                    .gck3(A6),
+                    .p8(BREQ_B_PU),
+                    .p9(A7),
                     .gnd1(GND),
-                    .p11(A6),
-                    .p12(A7),
-                    .p13(A8),
-                    .p14(),
+                    .p11(A8),
+                    .p12(A9),
+                    .p13(A10),
+                    .p14(A11),
                     .tdi(TDI),
                     .tms(TMS),
                     .tck(TCK),
-                    .p18(DIP0),
-                    .p19(DIP1),
-                    .p20(ALTCLKOUT),
+                    .p18(A12),
+                    .p19(A13),
+                    .p20(A14),
                     .vccint1(VDD),
-                    .p22(RFSH_B),  // unallocated CPC name
+                    .p22(A15),
                     .gnd2(GND),
-                    .p24(ROMEN_B), // unallocated CPC name
-                    .p25(ROMDIS),  // unallocated CPC name
+                    .p24(SYS_A8),
+                    .p25(RNW),
                     .p26(IRQ_B_PU),
-                    .p27(ALTCLK),
-                    .p28(SYS_MRDY),
-                    .p29(SYS_BREQ_B),
+                    .p27(FIRQ_B_PU),
+                    .p28(NMI_B_PU),
+                    .p29(RST_B),
                     .tdo(TDO),
                     .gnd3(GND),
                     .vccio(VDD),
-                    .p33(SYS_RST_B),
-                    .p34(),
-                    .p35(SYS_A8),
+                    .p33(IACK_B),
+                    .p34(BUSACK_B),
+                    .p35(CSIO_B),
                     .p36(CSUART_B),
-                    .p37(CSIO_B),
-                    .p38(IACK_B),
-                    .gsr(RESET_B),
-                    .gts2(),
+                    .p37(SYS_ECLK),
+                    .p38(SYS_Q_AUXCLK),
+                    .gsr(CPC_BUSRST_B),
+                    .gts2(CPC_ROMEN_B),
                     .vccint2(VDD),
-                    .gts1(RNW),
-                    .p43(MRDY_BUSY_PU),
-                    .p44(DECODE_FE_B),
+                    .gts1(SW_RST_B),
+                    .p43(DIP0),
+                    .p44(DIP1)
                     );
 
+  // LPF for ECLK
+  vresistor r100_8 (.p0(ECLK),.p1(ECLK_LPF));
+  cap47pf C6( .p0(ECLK_LPF), .p1(GND));
+
   // Test point for the clock
-  hdr1x05  TP0 ( .p1(GND), .p2(HSCLK), .p3(GND), .p4(ECLK), .p5(ECLK_BUF));
+  //  hdr1x05  TP0 ( .p1(GND), .p2(HSCLK), .p3(GND), .p4(ECLK), .p5(QCLK));
 
   // Standard layout JTAG port for programming the CPLD
   hdr8way JTAG (
@@ -206,20 +186,21 @@ module m6809_cpu_cpld();
                 );
 
   // Reset button/cap/resistor combination
-  resistor r10k (.p0(VDD),.p1(RST_B_0));
-  cap100nf C8( .p0(RST_B_0), .p1(GND));
+  resistor r10k (.p0(VDD),.p1(SW_RST_B));
+  cap100nf C7( .p0(SW_RST_B), .p1(GND));
 
   TSWITCH sw0 (
-	       .a_0(RST_B_0), .a_1(RST_B_0),
+	       .a_0(SW_RST_B), .a_1(SW_RST_B),
 	       .b_0(GND),.b_1(GND)
 	       );
 
-  // Link for E or buffered version to backplane
-  hdr1x03  lk0( .p1(ECLK), .p2(SYS_ECLK), .p3(ECLK_BUF));
-
   // Power ON LED
-  LED3MM led (.A(LED_PU),.K(GND));
-  resistor r2k2 (.p0(LED_PU), .p1(VDD));
+  LED3MM led0 (.A(DIP0),.K(GND));
+  LED3MM led1 (.A(DIP1),.K(GND));
+  LED3MM led2 (.A(LED_PU),.K(GND));
+  vresistor r2k2_0 (.p0(DIP0), .p1(VDD));
+  vresistor r2k2_1 (.p0(DIP1), .p1(VDD));
+  vresistor r2k2_2 (.p0(LED_PU), .p1(VDD));
 
   DIP2 dip2(
             .sw0_a(DIP0), .sw0_b(GND),
@@ -229,14 +210,14 @@ module m6809_cpu_cpld();
   // Misc pull-ups
   r10k_sil9 sil10k(
     		   .common(VDD),
-    		   .p0(MRDY_BUSY_PU),
-    		   .p1(BREQ_B_AVMA_PU),
-    		   .p2(HALT_B_PU),
-    		   .p3(IRQ_B_PU),
-    		   .p4(FIRQ_B_PU),
-    		   .p5(NMI_B_PU),
-    		   .p6(DIP0),
-		   .p7(DIP1)
+    		   .p0(HALT_B_PU),
+		   .p1(NMI_B_PU)
+    		   .p2(IRQ_B_PU),
+    		   .p3(FIRQ_B_PU),
+    		   .p4(MRDY_PU),
+    		   .p5(BREQ_B_PU),
+		   .p6(),
+    		   .p7(),
     		   );
 
   // current limiting resistors on databus
@@ -255,9 +236,8 @@ module m6809_cpu_cpld();
   cap100nf C2 ( .p0(VDD), .p1(GND) );
   cap100nf C3 ( .p0(VDD), .p1(GND) );
   cap100nf C4 ( .p0(VDD), .p1(GND) );
-  cap100nf C5 ( .p0(VDD), .p1(GND) );
-  cap100nf C6 ( .p0(VDD), .p1(GND) );
+
   //board decoupling
-  cap22uf  C7  (.plus(VDD), .minus(GND) );
+  cap22uf  C5  (.plus(VDD), .minus(GND) );
 
 endmodule

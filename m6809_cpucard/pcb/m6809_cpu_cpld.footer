@@ -10,33 +10,34 @@ Layer Top;
 
 ## PCB-Pool/PCB-Train design rule is actually 0.006/0.006 for wires
 CLASS 0 signal 0.010 0.010 ;
-CLASS 1 supply 0.025 0.010 ;
+CLASS 1 supply 0.020 0.010 ;
 
 ## Rotations
 ROTATE =R180 CONN0 ;
 ROTATE =R270  IC0;
-ROTATE =R270  IC1;
-ROTATE =R270  IC2;
 ROTATE =R270  OSC0;
 ROTATE =R270  OSC1;
-ROTATE =R270  CPLD;
-ROTATE =R270  TP0;
-ROTATE =R270  lk0;
-ROTATE =R270  JTAG;
+ROTATE =R315  CPLD;
+##ROTATE =R0    TP0;
+ROTATE =R0    JTAG;
 ROTATE =R90   sw0;
-ROTATE =R0    led;
-ROTATE =R0    r2k2;
+ROTATE =R180  r10k;
+ROTATE =R0    C7;
+ROTATE =R0    led0;
+ROTATE =R0    led1;
+ROTATE =R0    led2;
+ROTATE =R180  r2k2_0;
+ROTATE =R180  r2k2_1;
+ROTATE =R180  r2k2_2;
 ROTATE =R270  dip2;
 ROTATE =R270  sil10k;
 ROTATE =R180  C0;
 ROTATE =R180  C1;
 ROTATE =R180  C2;
-ROTATE =R180  C3;
-ROTATE =R180  C4;
+ROTATE =R135  C3;
+ROTATE =R135   C4;
 ROTATE =R180  C5;
 ROTATE =R180  C6;
-ROTATE =R180  C7;
-ROTATE =R180  C8;
 ROTATE =R270  r100_0;
 ROTATE =R270  r100_1;
 ROTATE =R270  r100_2;
@@ -45,44 +46,50 @@ ROTATE =R270  r100_4;
 ROTATE =R270  r100_5;
 ROTATE =R270  r100_6;
 ROTATE =R270  r100_7;
+ROTATE =R270  r100_8;
 
 ## Move to Final positions
 MOVE CONN0          (1.85 0.25) ;
 
 ## Column 1
-MOVE C0             (0.60 3.0) ;
-MOVE IC0            (0.60 1.9) ;
+MOVE sil10k          (0.15 2.55) ;
+MOVE C0             (0.7 3.0) ;
+MOVE IC0            (0.7 1.9) ;
 
 ## Column 2
-MOVE C1             (1.30 3.0) ;
-MOVE IC1            (1.30 2.6) ;
-MOVE C2             (1.30 2.1) ;
-MOVE IC2            (1.30 1.7) ;
-MOVE C3             (1.30 1.2) ;
-MOV  OSC0           (1.30 0.8) ;
+MOVE C1             (1.4 3.0) ;
+MOV  OSC0           (1.4 2.55) ;
+
+
+MOVE JTAG            (2.1 2.95) ;
 
 ## Column 3
-MOVE C4              (2.2 3.0) ;
-MOVE OSC1            (2.2 2.6) ;
+MOVE C2              (2.7 3.0) ;
+MOVE OSC1            (2.7 2.55) ;
 
-MOV  C5              (2.2 2.0) ;
-MOV  CPLD            (2.2 1.3) ;
-MOV  C6              (2.2 0.8) ;
+MOVE r100_8           (1.5 1.9);
+MOVE C6               (1.5 1.7);
+
+MOVE C3              (3.05 1.7) ;
+MOV  CPLD            (2.5 1.5) ;
+MOV  C4              (2.15 1.15) ;
 
 ## Column 4
-MOVE led             (3.1 3.0) ;
-MOVE dip2            (3.1 2.6) ;
-MOVE sil10k          (3.1 1.8) ;
-MOVE sw0             (3.1 1.0) ;
-MOVE r10k            (3.1 0.8) ;
-MOVE C8              (3.1 0.6) ;
+MOVE led0            (3.7 3.05) ;
+MOVE led1            (3.7 2.9) ;
+MOVE led2            (3.7 2.75) ;
+MOVE r2k2_0          (3.5 3.05) ;
+MOVE r2k2_1          (3.5 2.9) ;
+MOVE r2k2_2          (3.5 2.75) ;
+MOVE dip2            (3.6 2.4) ;
 
-## Connectors on RH edge
-MOVE JTAG            (3.7 2.8) ;
-MOVE TP0             (3.7 2.0) ;
-MOVE lk0             (3.7 1.0) ;
+MOVE sw0             (3.6 1.0) ;
+MOVE r10k            (3.55 0.75) ;
+MOVE C7              (3.6 0.6);
 
-MOVE C7              (3.7 0.3) ;
+## Connectors and electrolytic
+##MOVE TP0             (3.3 3.0 ) ;
+MOVE C5              (3.7 0.3) ;
 
 ## Resistors near bottom Connector
 MOVE r100_7       (1.3 0.6) ;
@@ -95,19 +102,28 @@ MOVE r100_1       (1.9 0.6) ;
 MOVE r100_0       (2.0 0.6) ;
 
 
-Layer tPlace ;
+
+Layer tPLACE ;
 CHANGE FONT PROPORTIONAL ;
 CHANGE SIZE 0.06
 TEXT 'MC6809 CPU Card v1.00' R90 (0.10 0.2) ;
 CHANGE SIZE 0.04
 TEXT '(C) 2022 Revaldinho, github.com/revaldinho/sys6809'  R90      (0.2 0.2) ;
 
-## WIRE  (0.1 2.91) (0.1 3.05 ) (0.78 3.05 ) (0.78 2.91) (0.1 2.91 ) ;
-## TEXT 'PIO0 PIO2 PIO4 PIO6 VDD' R0 (0.13 3.00) ;
-## TEXT 'GND  PIO1 PIO3 PIO5 PIO7' R0 (0.13 2.95) ;
-##
-## TEXT 'GND  TP4 TP3 TP2 TP1 TP0' R90 (3.60 0.90) ;
+CHANGE FONT FIXED ;
+CHANGE SIZE 0.03 ;
+CHANGE WIDTH 0.01 ;
+WIRE  (1.9 2.61) (1.9 2.75 ) (2.34 2.75 ) (2.34 2.61) (1.9 2.61 ) ;
+TEXT 'GND TDI TCK NC' R0 (1.93 2.70) ;
+TEXT 'GND TMS TDO 5V' R0 (1.93 2.65) ;
 
+
+##--## WIRE  (0.1 2.61) (0.1 2.75 ) (0.78 2.75 ) (0.78 2.61) (0.1 2.61 ) ;
+##--## TEXT 'PIO0 PIO2 PIO4 PIO6 VDD' R0 (0.13 2.70) ;
+##--## TEXT 'GND  PIO1 PIO3 PIO5 PIO7' R0 (0.13 2.65) ;
+##--##
+##--## TEXT 'GND  TP4 TP3 TP2 TP1 TP0' R90 (3.60 0.90) ;
+##--
 ## Preroute VDD and VSS rings and some spurs
 layer bottom;
 wire  0.04;
@@ -115,7 +131,7 @@ wire  'GND' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
 layer top;
 wire  0.04;
 wire  'VDD' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
-
+##--
 ##--## Autorouter
 ##--## AUTO CLK GND;   ## Route Clock and ground first
 ##--AUTO load /tmp/autorouter.ctl;
