@@ -45,8 +45,8 @@ module m6809_cpu();
     		   .p14(BREQ_B_PU),     //(BUSRQ_B),  o * o * o :
     		   .p12(MRDY_PU),       //(READY),    o * * * o :
     		   .p10(RESET_B),       //(RESET_B),  * * * * o :
-    		   .p8 (BA),            //(ROMDIS),   * * o o o :
-    		   .p6 (),              //(RAMDIS),   o * o o * : no-connect on CPU card - available for system signals
+    		   .p8 (),              //(ROMDIS),   * * o o o :
+    		   .p6 (BA),            //(RAMDIS),   o * o o * : no-connect on CPU card - available for system signals
     		   .p4 (GND),           //(LPEN),     o o o o o : LPEN not connected - use as additional GND
     		   .p2 (GND),	        // (VSS),     * * * * * :
 		   //-----------------------------------------------------------------------------
@@ -70,8 +70,8 @@ module m6809_cpu();
 		   .p15(NMI_B_PU),      //(NMI_B),    o * o o o :
 		   .p13(HALT_B_PU),     //(BUSACK_B), o * o * o :
 		   .p11(),              //(BUSRESET_B)o * o o * : no-connect on CPU card - available for system signals
-		   .p9 (BS)             //(ROMEN_B),  * * o o o :
-		   .p7 (),	        //(RAMRD_B),  o * o o * : no-connect on CPU card - available for system signals
+		   .p9 ()               //(ROMEN_B),  * * o o o :
+		   .p7 (BS),            //(RAMRD_B),  o * o o * : no-connect on CPU card - available for system signals
 		   .p5 (VDD),           //(CURSOR),   * * * * o : CURSOR not connected - reused as additional VDD
 		   .p3 (GND),           //(EXP_B),    * * * * o : EXP_B not connected - reused as additional GND
 		   .p1 (ECLK)           //(CLK),      * * * * * :

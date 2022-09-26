@@ -7,21 +7,22 @@ module m6809_cpu_cpld();
   wire    A15,A14,A13,A12,A11,A10,A9,A8,A7,A6,A5,A4,A3,A2,A1,A0;
   wire    D7,D6,D5,D4,D3,D2,D1,D0;
   wire    DR7,DR6,DR5,DR4,DR3,DR2,DR1,DR0;
-  wire    ECLK, QCLK, ECLK_LPF;
+
+  special_wire    ECLK, QCLK, ECLK_LPF, SYS_Q_AUXCLK, SYS_ECLK;
+  special_wire    HSCLK, AUXCLK;
+
   wire    RNW;
   wire    IRQ_B_PU, NMI_B_PU, FIRQ_B_PU;
   wire    MRDY_PU, BREQ_B_PU, HALT_B_PU;
   wire    RST_B;
   wire    BS, BA, IACK_B;
-  wire    LED_PU;
   wire    CSUART_B, CSIO_B;
   wire    DIP0, DIP1;
   wire    TDO, TMS, TDI, TCK;
-  wire    SYS_A8, SYS_ECLK;
-  wire    HSCLK, AUXCLK;
-  wire    CPC_BUSRST_B, CPC_ROMEN_B, CPC_ROMDIS;
+  wire    SYS_A8;
+  wire    LED_PU;
+  wire    CPC_BUSRST_B_PU, CPC_ROMEN_B, CPC_ROMDIS;
   wire    BUSACK_B, SW_RST_B;
-  wire    SYS_Q_AUXCLK;
 
   //                                                      c   r
   //                 		                          p t a
@@ -74,7 +75,7 @@ module m6809_cpu_cpld();
 		    .p17(VDD),          //(HALT_B),   o o o o o : HALT Never connected - reuse as additional VDD
 		    .p15(NMI_B_PU),     //(NMI_B),    o * o o o :
 		    .p13(BUSACK_B),     //(BUSACK_B), o * o * o :
-		    .p11(CPC_BUSRST_B), //(BUSRST_B), o * o o * : no-connect on CPU card - available for system signals
+		    .p11(CPC_BUSRST_B_PU), //(BUSRST_B), o * o o * : no-connect on CPU card - available for system signals
 		    .p9 (CPC_ROMEN_B),      //(ROMEN_B),  * * o o o :
 		    .p7 (A8),	        //(RAMRD_B),  o * o o * : no-connect on CPU card - available for system signals
 		    .p5 (VDD),          //(CURSOR),   o o o o o : CURSOR not connected - reused as additional VDD
@@ -127,43 +128,43 @@ module m6809_cpu_cpld();
                     .p1(BA),
                     .p2(BS),
                     .p3(QCLK),
-                    .p4(A5),
-                    .gck1(ECLK_LPF),
+                    .p4(IRQ_B_PU),
+                    .gck1(HSCLK),
                     .gck2(AUXCLK),
-                    .gck3(A6),
-                    .p8(BREQ_B_PU),
-                    .p9(A7),
+                    .gck3(ECLK_LPF),
+                    .p8(FIRQ_B_PU),
+                    .p9(NMI_B_PU),
                     .gnd1(GND),
-                    .p11(A8),
-                    .p12(A9),
-                    .p13(A10),
-                    .p14(A11),
+                    .p11(A15),
+                    .p12(A14),
+                    .p13(A13),
+                    .p14(A12),
                     .tdi(TDI),
                     .tms(TMS),
                     .tck(TCK),
-                    .p18(A12),
-                    .p19(A13),
-                    .p20(A14),
+                    .p18(A11),
+                    .p19(A10),
+                    .p20(A9),
                     .vccint1(VDD),
-                    .p22(A15),
+                    .p22(BREQ_B_PU),
                     .gnd2(GND),
-                    .p24(SYS_A8),
+                    .p24(A7),
                     .p25(RNW),
-                    .p26(IRQ_B_PU),
-                    .p27(FIRQ_B_PU),
-                    .p28(NMI_B_PU),
-                    .p29(RST_B),
+                    .p26(A6),
+                    .p27(A5),
+                    .p28(SYS_Q_AUXCLK),
+                    .p29(SYS_A8),
                     .tdo(TDO),
                     .gnd3(GND),
                     .vccio(VDD),
-                    .p33(IACK_B),
+                    .p33(A8),
                     .p34(BUSACK_B),
                     .p35(CSIO_B),
                     .p36(CSUART_B),
                     .p37(SYS_ECLK),
-                    .p38(SYS_Q_AUXCLK),
-                    .gsr(CPC_BUSRST_B),
-                    .gts2(CPC_ROMEN_B),
+                    .p38(IACK_B),
+                    .gsr(CPC_BUSRST_B_PU),
+                    .gts2(RST_B),
                     .vccint2(VDD),
                     .gts1(SW_RST_B),
                     .p43(DIP0),
@@ -186,7 +187,7 @@ module m6809_cpu_cpld();
                 );
 
   // Reset button/cap/resistor combination
-  resistor r10k (.p0(VDD),.p1(SW_RST_B));
+  vresistor r10k (.p0(VDD),.p1(SW_RST_B));
   cap100nf C7( .p0(SW_RST_B), .p1(GND));
 
   TSWITCH sw0 (
@@ -195,12 +196,10 @@ module m6809_cpu_cpld();
 	       );
 
   // Power ON LED
-  LED3MM led0 (.A(DIP0),.K(GND));
-  LED3MM led1 (.A(DIP1),.K(GND));
-  LED3MM led2 (.A(LED_PU),.K(GND));
-  vresistor r2k2_0 (.p0(DIP0), .p1(VDD));
-  vresistor r2k2_1 (.p0(DIP1), .p1(VDD));
-  vresistor r2k2_2 (.p0(LED_PU), .p1(VDD));
+  LED3MM led0 (.A(CPC_BUSRST_B_PU),.K(GND));
+  LED3MM led1 (.A(LED_PU),.K(GND));
+  vresistor r2k2_0 (.p0(CPC_BUSRST_B_PU), .p1(VDD));
+  vresistor r2k2_1 (.p0(LED_PU), .p1(VDD));
 
   DIP2 dip2(
             .sw0_a(DIP0), .sw0_b(GND),
