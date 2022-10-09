@@ -17,12 +17,12 @@ module m6809_cpu_cpld();
   wire    RST_B;
   wire    BS, BA, IACK_B;
   wire    CSUART_B, CSIO_B;
-  wire    DIP0, DIP1;
+  wire    DIP0_PU, DIP1_PU;
   wire    TDO, TMS, TDI, TCK;
   wire    SYS_A8;
   wire    LED_PU;
   wire    CPC_BUSRST_B_PU, CPC_ROMEN_B, CPC_ROMDIS;
-  wire    BUSACK_B, SW_RST_B;
+  wire    BUSACK_B, SW_RST_B, RAMDIS;
 
   //                                                      c   r
   //                 		                          p t a
@@ -51,8 +51,8 @@ module m6809_cpu_cpld();
     		    .p14(BREQ_B_PU),    //(BUSRQ_B),  o * o * o :
     		    .p12(MRDY_PU),      //(READY),    o * * * o :
     		    .p10(RST_B),        //(RST_B),  * * * * o :
-    		    .p8 (CPC_ROMDIS),       //(ROMDIS),   * * o o o :
-    		    .p6 (HALT_B_PU),    //(RAMDIS),   o * o o * : no-connect on CPU card - available for system signals
+    		    .p8 (HALT_B_PU),       //(ROMDIS),   * * o o o :
+    		    .p6 (RAMDIS),       //(RAMDIS),   o * o o * : no-connect on CPU card - available for system signals
     		    .p4 (GND),          //(LPEN),     o o o o o : LPEN not connected - use as additional GND
     		    .p2 (GND),	        // (VSS),     * * * * * :
 		    //-----------------------------------------------------------------------------
@@ -167,16 +167,16 @@ module m6809_cpu_cpld();
                     .gts2(RST_B),
                     .vccint2(VDD),
                     .gts1(SW_RST_B),
-                    .p43(DIP0),
-                    .p44(DIP1)
+                    .p43(DIP0_PU),
+                    .p44(DIP1_PU)
                     );
 
+  hdr1x05 tp0 (.p1(ECLK), .p2(GND), .p3(ECLK_LPF), .p4(GND), .p5(QCLK));
+
   // LPF for ECLK
-  vresistor r100_8 (.p0(ECLK),.p1(ECLK_LPF));
+  resistor r100_8 (.p0(ECLK),.p1(ECLK_LPF));
   cap47pf C6( .p0(ECLK_LPF), .p1(GND));
 
-  // Test point for the clock
-  //  hdr1x05  TP0 ( .p1(GND), .p2(HSCLK), .p3(GND), .p4(ECLK), .p5(QCLK));
 
   // Standard layout JTAG port for programming the CPLD
   hdr8way JTAG (
@@ -196,14 +196,18 @@ module m6809_cpu_cpld();
 	       );
 
   // Power ON LED
-  LED3MM led0 (.A(CPC_BUSRST_B_PU),.K(GND));
-  LED3MM led1 (.A(LED_PU),.K(GND));
-  vresistor r2k2_0 (.p0(CPC_BUSRST_B_PU), .p1(VDD));
-  vresistor r2k2_1 (.p0(LED_PU), .p1(VDD));
+  LED3MM d0 (.A(LED_PU),.K(GND));
+  LED3MM d1 (.A(CPC_BUSRST_B_PU),.K(GND));
+  LED3MM d2 (.A(DIP0_PU),.K(GND));
+  LED3MM d3 (.A(DIP1_PU),.K(GND));
+  vresistor r2k2_0 (.p0(LED_PU), .p1(VDD));
+  vresistor r2k2_1 (.p0(CPC_BUSRST_B_PU), .p1(VDD));
+  vresistor r2k2_2 (.p0(DIP0_PU), .p1(VDD));
+  vresistor r2k2_3 (.p0(DIP1_PU), .p1(VDD));
 
   DIP2 dip2(
-            .sw0_a(DIP0), .sw0_b(GND),
-            .sw1_a(DIP1),.sw1_b(GND),
+            .sw0_a(DIP0_PU), .sw0_b(GND),
+            .sw1_a(DIP1_PU),.sw1_b(GND),
             );
 
   // Misc pull-ups
