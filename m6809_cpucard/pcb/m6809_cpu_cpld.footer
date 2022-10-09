@@ -5,7 +5,7 @@ DRC load /tmp/design_rules;
 Grid inch;
 Set Wire_Bend 0;
 Layer Dimension;
-Wire 0  (0 0) (3.9 3.2) (0 0);
+Wire 0  (0 0) (3.9 0) (3.9 3.2) (0 3.2) (0 0);
 Layer Top;
 
 ## PCB-Pool/PCB-Train design rule is actually 0.006/0.006 for wires
