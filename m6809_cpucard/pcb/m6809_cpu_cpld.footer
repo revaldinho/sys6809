@@ -23,24 +23,24 @@ ROTATE =R315  CPLD;
 ROTATE =R0    JTAG;
 ROTATE =R90   sw0;
 ROTATE =R180  r10k;
-ROTATE =R0    C7;
 ROTATE =R0    d0;
 ROTATE =R0    d1;
 ROTATE =R0    d2;
 ROTATE =R0    d3;
+ROTATE =R0    d4;
 ROTATE =R180  r2k2_0;
 ROTATE =R180  r2k2_1;
 ROTATE =R180  r2k2_2;
 ROTATE =R180  r2k2_3;
+ROTATE =R180  r2k2_4;
 ROTATE =R270  dip2;
 ROTATE =R270  sil10k;
 ROTATE =R180  C0;
-ROTATE =R180  C1;
-ROTATE =R180  C2;
-ROTATE =R135  C3;
-ROTATE =R135  C4;
-ROTATE =R180  C5;
-ROTATE =R90   C6;
+ROTATE =R135  C1;
+ROTATE =R135  C2;
+ROTATE =R180  C3;
+ROTATE =R90   C4;
+ROTATE =R0    C5;
 ROTATE =R270  r100_0;
 ROTATE =R270  r100_1;
 ROTATE =R270  r100_2;
@@ -60,46 +60,46 @@ MOVE C0             (0.8 3.0) ;
 MOVE IC0            (0.8 1.9) ;
 
 ## Column 2
-MOVE C1             (1.55 3.0) ;
-MOV  OSC0           (1.55 2.55) ;
+MOV  OSC0           (1.55 2.7) ;
 
 MOVE tp0              (1.9  2.25);
 MOVE r100_8           (2.05 2.25);
-MOVE C6               (2.20 2.15);
+MOVE C4               (2.20 2.15);
 
 
 MOVE JTAG            (2.2 2.95) ;
 
 ## Column 3
-MOVE C2              (3.0 3.0) ;
-MOVE OSC1            (3.0 2.55) ;
+MOVE OSC1            (3.0 2.7) ;
 
-MOVE C3              (3.1 1.75) ;
+MOVE C1              (3.1 1.75) ;
 MOV  CPLD            (2.55 1.55) ;
-MOV  C4              (2.2 1.2) ;
+MOV  C2              (2.15 1.2) ;
 
 ## Column 4
-MOVE d0            (3.7 3.0) ;
-MOVE r2k2_0          (3.5 3.0) ;
+MOVE dip2            (3.6 2.9) ;
+MOVE d0              (3.7 2.6) ;
+MOVE r2k2_0          (3.5 2.6) ;
+MOVE d1              (3.7 2.4) ;
+MOVE r2k2_1          (3.5 2.4) ;
 
-MOVE d2            (3.7 2.8) ;
-MOVE r2k2_2          (3.5 2.8) ;
-MOVE dip2            (3.6 2.5) ;
-MOVE d3            (3.7 2.2) ;
-MOVE r2k2_3          (3.5 2.2) ;
-MOVE d1            (3.7 2.0) ;
-MOVE r2k2_1          (3.5 2.0) ;
+MOVE d2              (3.7 2.2) ;
+MOVE r2k2_2          (3.5 2.2) ;
+MOVE d3              (3.7 2.0) ;
+MOVE r2k2_3          (3.5 2.0) ;
+MOVE d4              (3.7 1.8) ;
+MOVE r2k2_4          (3.5 1.8) ;
 
 
 
-MOVE sw0             (3.6 1.3) ;
-MOVE r10k            (3.6 1.05) ;
-MOVE C7              (3.6 0.9);
+MOVE sw0             (3.6 1.0) ;
+MOVE r10k            (3.6 0.75) ;
+MOVE C5              (3.6 0.6);
 
 
 ## Connectors and electrolytic
 ##MOVE TP0             (3.3 3.0 ) ;
-MOVE C5              (3.7 0.3) ;
+MOVE C3              (3.7 0.3) ;
 
 ## Resistors near bottom Connector
 MOVE r100_7       (1.3 0.6) ;
@@ -127,35 +127,30 @@ WIRE  (2.0 2.61) (2.0 2.75 ) (2.44 2.75 ) (2.44 2.61) (2.0 2.61 ) ;
 TEXT 'GND TDI TCK NC' R0 (2.03 2.70) ;
 TEXT 'GND TMS TDO 5V' R0 (2.03 2.65) ;
 
-
-##--## WIRE  (0.1 2.61) (0.1 2.75 ) (0.78 2.75 ) (0.78 2.61) (0.1 2.61 ) ;
-##--## TEXT 'PIO0 PIO2 PIO4 PIO6 VDD' R0 (0.13 2.70) ;
-##--## TEXT 'GND  PIO1 PIO3 PIO5 PIO7' R0 (0.13 2.65) ;
-##--##
-##--## TEXT 'GND  TP4 TP3 TP2 TP1 TP0' R90 (3.60 0.90) ;
-##--
 ## Preroute VDD and GND rings and some spurs
 layer bottom;
-wire  0.04;
-wire  'GND' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
+wire  0.025;
+wire  'GND' (0.03 0.03) ( 3.87 0.03) (3.87 3.17) (0.03 3.17) (0.03 0.03);
 layer top;
-wire  0.04;
-wire  'VDD' (0.04 0.04) ( 3.86 0.04) (3.86 3.16) (0.04 3.16) (0.04 0.04);
-
-## Autorouter
-## AUTO CLK GND;   ## Route Clock and ground first
-AUTO load /tmp/autorouter.ctl;
-AUTO ;
-
-##  Define power fills top and bottom over whole board area
-layer Top ;
-polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
-
-layer Bottom ;
-polygon GND 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+wire  0.025;
+wire  'VDD' (0.03 0.03) ( 3.87 0.03) (3.87 3.17) (0.03 3.17) (0.03 0.03);
+wire  'VDD' (1.95 0.20) (1.95 0.03) ;
 
 
-Ratsnest ;  ##  Calculate and display polygons
+##  ## Autorouter
+##  ## AUTO CLK GND;   ## Route Clock and ground first
+##  AUTO load /tmp/autorouter.ctl;
+##  AUTO ;
+##  
+##  ##  Define power fills top and bottom over whole board area
+##  layer Top ;
+##  polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+##  
+##  layer Bottom ;
+##  polygon GND 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+##  
+##  
+##  Ratsnest ;  ##  Calculate and display polygons
 
 
 Window Fit;
