@@ -52,7 +52,7 @@ ROTATE =R270  r100_7;
 ROTATE =R270  r100_8;
 ROTATE =R270  tp0;
 ## Move to Final positions
-MOVE CONN0          (1.85 0.25) ;
+MOVE CONN0          (1.95 0.25) ;
 
 ## Column 1
 MOVE sil10k          (0.15 2.55) ;
@@ -134,7 +134,7 @@ wire  'GND' (0.03 0.03) ( 3.87 0.03) (3.87 3.17) (0.03 3.17) (0.03 0.03);
 layer top;
 wire  0.025;
 wire  'VDD' (0.03 0.03) ( 3.87 0.03) (3.87 3.17) (0.03 3.17) (0.03 0.03);
-wire  'VDD' (1.95 0.20) (1.95 0.03) ;
+wire  'VDD' (2.05 0.20) (2.05 0.03) ;
 
 
 ## Autorouter
