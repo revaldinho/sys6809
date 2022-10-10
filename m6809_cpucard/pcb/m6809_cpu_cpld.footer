@@ -137,20 +137,20 @@ wire  'VDD' (0.03 0.03) ( 3.87 0.03) (3.87 3.17) (0.03 3.17) (0.03 0.03);
 wire  'VDD' (1.95 0.20) (1.95 0.03) ;
 
 
-##  ## Autorouter
-##  ## AUTO CLK GND;   ## Route Clock and ground first
-##  AUTO load /tmp/autorouter.ctl;
-##  AUTO ;
-##  
-##  ##  Define power fills top and bottom over whole board area
-##  layer Top ;
-##  polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
-##  
-##  layer Bottom ;
-##  polygon GND 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
-##  
-##  
-##  Ratsnest ;  ##  Calculate and display polygons
+## Autorouter
+## AUTO CLK GND;   ## Route Clock and ground first
+AUTO load /tmp/autorouter.ctl;
+AUTO ;
+
+##  Define power fills top and bottom over whole board area
+layer Top ;
+polygon VDD 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+
+layer Bottom ;
+polygon GND 0.015 (0 0) (0 3.2) (3.9 3.2) (3.9 0) (0 0) ;
+
+
+Ratsnest ;  ##  Calculate and display polygons
 
 
 Window Fit;

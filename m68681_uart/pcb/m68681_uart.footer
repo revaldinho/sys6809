@@ -16,14 +16,12 @@ CLASS 1 supply 0.025 0.010 ;
 MOVE CONN0  (1.5 1.5);
 MOVE IC_0  (1.5 1.5);
 MOVE IC_1  (1.5 1.5);
-MOVE IC_2  (1.5 1.5);
 MOVE dip8_0  (1.5 1.5);
 
 ##ROTATE =R90 C22UF ;
 ROTATE =R180 CONN0 ;
 ROTATE =R270  IC_0;
 ROTATE =R270  IC_1;
-ROTATE =R270  IC_2;
 ROTATE =R270  dip8_0;
 
 ##ROTATE =R0 DIPSW0 ;
@@ -44,10 +42,8 @@ ROTATE =R270  dip8_0;
 MOVE CONN0          (1.85 0.25) ;
 MOVE IC_0           (0.70 1.70) ;         
 MOVE IC_1           (2.00 1.70) ;         
-MOVE IC_2           (3.00 1.70) ;
 MOVE dcap_0         (0.70 2.80) ;
 MOVE dcap_1         (2.00 2.80) ;
-MOVE dcap_2         (3.00 2.80) ;
 MOVE dip8_0           (3.40 2.60) ;
 
 ##MOVE DIPSW0         (3.40 2.90) ;
@@ -68,7 +64,7 @@ MOVE dip8_0           (3.40 2.60) ;
 Layer tPlace ;
 CHANGE FONT PROPORTIONAL ;
 CHANGE SIZE 0.06
-TEXT 'MC6809 CPU Card v1.00' R90 (0.10 0.2) ;
+TEXT 'MC68681 UART Card v1.00' R90 (0.10 0.2) ;
 CHANGE SIZE 0.04
 TEXT '(C) 2022 Revaldinho, github.com/revaldinho/sys6809'  R90      (0.2 0.2) ;
 
