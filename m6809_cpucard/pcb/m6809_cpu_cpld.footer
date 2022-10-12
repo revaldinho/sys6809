@@ -10,7 +10,7 @@ Layer Top;
 
 ## PCB-Pool/PCB-Train design rule is actually 0.006/0.006 for wires
 CLASS 0 signal  0.010 0.010 ;
-CLASS 1 supply  0.020 0.010 ;
+CLASS 1 supply  0.020 0.012 ;
 CLASS 2 special 0.015 0.012 ;
 
 ## Rotations
@@ -128,13 +128,13 @@ TEXT 'GND TDI TCK NC' R0 (2.03 2.70) ;
 TEXT 'GND TMS TDO 5V' R0 (2.03 2.65) ;
 
 ## Preroute VDD and GND rings and some spurs
-layer bottom;
-wire  0.025;
-wire  'GND' (0.03 0.03) ( 3.87 0.03) (3.87 3.17) (0.03 3.17) (0.03 0.03);
 layer top;
-wire  0.025;
-wire  'VDD' (0.03 0.03) ( 3.87 0.03) (3.87 3.17) (0.03 3.17) (0.03 0.03);
-wire  'VDD' (2.05 0.20) (2.05 0.03) ;
+wire  0.020;
+wire  'VDD' (0.025 0.025) ( 3.875 0.025) (3.875 3.175) (0.025 3.175) (0.025 0.025);
+wire  'VDD' (2.05 0.20) (2.05 0.025) ;
+layer bottom;
+wire  0.020;
+wire  'GND' (0.025 0.025) ( 3.875 0.025) (3.875 3.175) (0.025 3.175) (0.025 0.025);
 
 
 ## Autorouter
